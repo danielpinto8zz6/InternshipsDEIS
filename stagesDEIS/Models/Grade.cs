@@ -4,6 +4,8 @@ namespace stagesDEIS.Models
 {
     public class Grade
     {
+        public int GradeId { get; set; }
+        
         [Required(ErrorMessage = "You must provide a subject")]
         public string Subject { get; set; }
 
