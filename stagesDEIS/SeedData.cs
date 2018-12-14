@@ -15,23 +15,27 @@ namespace stagesDEIS
         {
             var roleManager = services
                 .GetRequiredService<RoleManager<IdentityRole>>();
-            await EnsureRolesAsync(roleManager);
+
+            await CreateRoleAsync(roleManager, Constants.AdministratorRole);
+            await CreateRoleAsync(roleManager, Constants.StudentRole);
+            await CreateRoleAsync(roleManager, Constants.ProfessorRole);
+            await CreateRoleAsync(roleManager, Constants.CompanyRole);
 
             var userManager = services
                 .GetRequiredService<UserManager<ApplicationUser>>();
             await EnsureTestAdminAsync(userManager);
         }
 
-        private static async Task EnsureRolesAsync(
-    RoleManager<IdentityRole> roleManager)
+        private static async Task CreateRoleAsync(
+    RoleManager<IdentityRole> roleManager, String role)
         {
             var alreadyExists = await roleManager
-                .RoleExistsAsync(Constants.AdministratorRole);
+                .RoleExistsAsync(role);
 
             if (alreadyExists) return;
 
             await roleManager.CreateAsync(
-                new IdentityRole(Constants.AdministratorRole));
+                new IdentityRole(role));
         }
 
         private static async Task EnsureTestAdminAsync(
