@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace stagesDEIS.Models
 {
     public enum State
@@ -7,6 +9,11 @@ namespace stagesDEIS.Models
 
     public enum Branch
     {
-        APPLICATION_DEVELOPMENT, INFORMATION_SYSTEMS, NETWORKS
+        [Display(Name = "Application Development")]
+        APPLICATION_DEVELOPMENT,
+        [Display(Name = "Information Systems")]
+        INFORMATION_SYSTEMS,
+        [Display(Name = "Networks")]
+        NETWORKS
     }
 }
