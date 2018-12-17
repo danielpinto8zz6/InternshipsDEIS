@@ -185,7 +185,8 @@ namespace stagesDEIS.Data.Migrations
                         .IsRequired();
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.HasKey("CompanyId");
 
@@ -216,6 +217,12 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<int>("ProfessorId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Contact")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
                     b.HasKey("ProfessorId");
 
                     b.ToTable("Professor");
@@ -238,8 +245,15 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<string>("Objectives")
+                    b.Property<string>("Justification")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Location")
                         .IsRequired();
+
+                    b.Property<string>("Objectives")
+                        .IsRequired()
+                        .HasMaxLength(200);
 
                     b.Property<int>("PlacedId");
 
@@ -268,7 +282,16 @@ namespace stagesDEIS.Data.Migrations
 
                     b.Property<int>("Branch");
 
+                    b.Property<string>("Contact")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
                     b.Property<int?>("ProposalId");
+
+                    b.Property<string>("UnfinishedGrades")
+                        .IsRequired();
 
                     b.HasKey("StudentId");
 
@@ -332,7 +355,7 @@ namespace stagesDEIS.Data.Migrations
             modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
                 {
                     b.HasOne("stagesDEIS.Models.Company", "Company")
-                        .WithMany()
+                        .WithMany("Proposals")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
 

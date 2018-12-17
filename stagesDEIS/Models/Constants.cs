@@ -4,7 +4,12 @@ namespace stagesDEIS.Models
 {
     public enum State
     {
-
+        [Display(Name = "Accepted")]
+        ACCEPTED,
+        [Display(Name = "Rejected")]
+        REJECTED,
+        [Display(Name = "Standby")]
+        STANDBY
     }
 
     public enum Branch

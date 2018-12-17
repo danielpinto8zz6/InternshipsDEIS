@@ -9,7 +9,7 @@ using stagesDEIS.Data;
 namespace stagesDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181206202717_CreateDatabase")]
+    [Migration("20181217131602_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,133 @@ namespace stagesDEIS.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("stagesDEIS.Models.Company", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Address")
+                        .IsRequired();
+
+                    b.Property<string>("Contact")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.HasKey("CompanyId");
+
+                    b.ToTable("Company");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Grade", b =>
+                {
+                    b.Property<int>("GradeId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Pontuation");
+
+                    b.Property<int?>("StudentId");
+
+                    b.Property<string>("Subject")
+                        .IsRequired();
+
+                    b.HasKey("GradeId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Grade");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Professor", b =>
+                {
+                    b.Property<int>("ProfessorId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Contact")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("ProfessorId");
+
+                    b.ToTable("Professor");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
+                {
+                    b.Property<int>("ProposalId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AccessConditions")
+                        .IsRequired();
+
+                    b.Property<int>("Branch");
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description")
+                        .IsRequired();
+
+                    b.Property<string>("Justification")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Location")
+                        .IsRequired();
+
+                    b.Property<string>("Objectives")
+                        .IsRequired()
+                        .HasMaxLength(200);
+
+                    b.Property<int>("PlacedId");
+
+                    b.Property<int>("ProfessorId");
+
+                    b.Property<int>("State");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("ProposalId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("PlacedId");
+
+                    b.HasIndex("ProfessorId");
+
+                    b.ToTable("Proposal");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Student", b =>
+                {
+                    b.Property<int>("StudentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Branch");
+
+                    b.Property<string>("Contact")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<int?>("ProposalId");
+
+                    b.Property<string>("UnfinishedGrades")
+                        .IsRequired();
+
+                    b.HasKey("StudentId");
+
+                    b.HasIndex("ProposalId");
+
+                    b.ToTable("Student");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -218,6 +345,38 @@ namespace stagesDEIS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Grade", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.Student")
+                        .WithMany("Grades")
+                        .HasForeignKey("StudentId");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.Company", "Company")
+                        .WithMany("Proposals")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("stagesDEIS.Models.Student", "Placed")
+                        .WithMany()
+                        .HasForeignKey("PlacedId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("stagesDEIS.Models.Professor", "Professor")
+                        .WithMany()
+                        .HasForeignKey("ProfessorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Student", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.Proposal")
+                        .WithMany("Candidates")
+                        .HasForeignKey("ProposalId");
                 });
 #pragma warning restore 612, 618
         }

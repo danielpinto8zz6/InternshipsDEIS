@@ -10,6 +10,7 @@ namespace stagesDEIS.Models
         public int ProposalId { get; set; }
 
         [Required(ErrorMessage = "You must provide a title")]
+        [DataType(DataType.Text)]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "You must provide a description")]
@@ -23,12 +24,19 @@ namespace stagesDEIS.Models
         public State State { get; set; }
 
         [Required(ErrorMessage = "You must provide access conditions")]
+        [DataType(DataType.MultilineText)]
         public string AccessConditions { get; set; }
 
+        [Required]
+        [DataType(DataType.MultilineText)]
+        public string Location { get; set; }
+
+        [Required]
         public Branch Branch { get; set; }
 
         [Required(ErrorMessage = "You must provide objectives")]
         [DataType(DataType.MultilineText)]
+        [StringLength(200, MinimumLength = 20, ErrorMessage = "Should be at least 20 characters and at most 200")]
         public string Objectives { get; set; }
 
         public Professor Professor { get; set; }
@@ -47,5 +55,9 @@ namespace stagesDEIS.Models
 
         [ForeignKey("Student")]
         public int PlacedId { get; set; }
+
+        [DataType(DataType.MultilineText)]
+        [StringLength(100, MinimumLength = 10, ErrorMessage = "Justification must be between 10 and 100 chars")]
+        public string Justification { get; set; }
     }
 }
