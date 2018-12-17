@@ -11,7 +11,7 @@
     var isAdmin = currentUser != null
         && await userManager.IsInRoleAsync(
             currentUser,
-            Constants.AdministratorRole);
+            "Administrator");
 
     if (isAdmin)
     {

@@ -16,26 +16,28 @@ namespace stagesDEIS
             var roleManager = services
                 .GetRequiredService<RoleManager<IdentityRole>>();
 
-            await CreateRoleAsync(roleManager, Constants.AdministratorRole);
-            await CreateRoleAsync(roleManager, Constants.StudentRole);
-            await CreateRoleAsync(roleManager, Constants.ProfessorRole);
-            await CreateRoleAsync(roleManager, Constants.CompanyRole);
+            await CreateRolesAsync(roleManager);
 
             var userManager = services
                 .GetRequiredService<UserManager<ApplicationUser>>();
             await EnsureTestAdminAsync(userManager);
         }
 
-        private static async Task CreateRoleAsync(
-    RoleManager<IdentityRole> roleManager, String role)
+        private static async Task CreateRolesAsync(
+    RoleManager<IdentityRole> roleManager)
         {
-            var alreadyExists = await roleManager
-                .RoleExistsAsync(role);
+            string[] RoleNames = { "Administrator", "Company", "Student", "Professor" };
 
-            if (alreadyExists) return;
+            foreach (var Role in RoleNames)
+            {
+                var alreadyExists = await roleManager
+                    .RoleExistsAsync(Role);
 
-            await roleManager.CreateAsync(
-                new IdentityRole(role));
+                if (alreadyExists) return;
+
+                await roleManager.CreateAsync(
+                    new IdentityRole(Role));
+            }
         }
 
         private static async Task EnsureTestAdminAsync(
@@ -55,7 +57,7 @@ namespace stagesDEIS
             await userManager.CreateAsync(
                 testAdmin, "NotSecure123!!");
             await userManager.AddToRoleAsync(
-                testAdmin, Constants.AdministratorRole);
+                testAdmin, "Administrator");
         }
     }
 }
