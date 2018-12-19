@@ -9,7 +9,7 @@ using stagesDEIS.Data;
 namespace stagesDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181217131602_CreateDatabase")]
+    [Migration("20181218212014_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,8 +177,7 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Company", b =>
                 {
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("CompanyId");
 
                     b.Property<string>("Address")
                         .IsRequired();
@@ -197,12 +196,12 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Grade", b =>
                 {
-                    b.Property<int>("GradeId")
+                    b.Property<string>("GradeId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Pontuation");
 
-                    b.Property<int?>("StudentId");
+                    b.Property<string>("StudentId");
 
                     b.Property<string>("Subject")
                         .IsRequired();
@@ -216,7 +215,7 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Professor", b =>
                 {
-                    b.Property<int>("ProfessorId")
+                    b.Property<string>("ProfessorId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Contact")
@@ -232,7 +231,7 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
                 {
-                    b.Property<int>("ProposalId")
+                    b.Property<string>("ProposalId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AccessConditions")
@@ -240,7 +239,7 @@ namespace stagesDEIS.Data.Migrations
 
                     b.Property<int>("Branch");
 
-                    b.Property<int>("CompanyId");
+                    b.Property<string>("CompanyId");
 
                     b.Property<DateTime>("Date");
 
@@ -257,9 +256,9 @@ namespace stagesDEIS.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<int>("PlacedId");
+                    b.Property<string>("PlacedId");
 
-                    b.Property<int>("ProfessorId");
+                    b.Property<string>("ProfessorId");
 
                     b.Property<int>("State");
 
@@ -279,7 +278,7 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Student", b =>
                 {
-                    b.Property<int>("StudentId")
+                    b.Property<string>("StudentId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Branch");
@@ -290,7 +289,7 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<int?>("ProposalId");
+                    b.Property<string>("ProposalId");
 
                     b.Property<string>("UnfinishedGrades")
                         .IsRequired();
@@ -347,6 +346,14 @@ namespace stagesDEIS.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("stagesDEIS.Models.Company", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.ApplicationUser", "User")
+                        .WithOne("Company")
+                        .HasForeignKey("stagesDEIS.Models.Company", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("stagesDEIS.Models.Grade", b =>
                 {
                     b.HasOne("stagesDEIS.Models.Student")
@@ -358,18 +365,15 @@ namespace stagesDEIS.Data.Migrations
                 {
                     b.HasOne("stagesDEIS.Models.Company", "Company")
                         .WithMany("Proposals")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CompanyId");
 
                     b.HasOne("stagesDEIS.Models.Student", "Placed")
                         .WithMany()
-                        .HasForeignKey("PlacedId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PlacedId");
 
                     b.HasOne("stagesDEIS.Models.Professor", "Professor")
                         .WithMany()
-                        .HasForeignKey("ProfessorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ProfessorId");
                 });
 
             modelBuilder.Entity("stagesDEIS.Models.Student", b =>

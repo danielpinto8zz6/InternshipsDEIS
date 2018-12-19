@@ -5,7 +5,7 @@ namespace stagesDEIS.Models
 {
     public class InternshipCommittee
     {
-        public int InternshipCommitteeId { get; set; }
+        public string InternshipCommitteeId { get; set; }
 
         public IList<Professor> Professors { get; set; }
 

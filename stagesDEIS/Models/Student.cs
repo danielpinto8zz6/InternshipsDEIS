@@ -6,7 +6,7 @@ namespace stagesDEIS.Models
 {
     public class Student
     {
-        public int StudentId { get; set; }
+        public string StudentId { get; set; }
 
         [NotMapped]
         public IList<Proposal> Application { get; set; }

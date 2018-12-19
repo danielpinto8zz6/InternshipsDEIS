@@ -47,26 +47,10 @@ namespace stagesDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Company",
-                columns: table => new
-                {
-                    CompanyId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Address = table.Column<string>(nullable: false),
-                    Contact = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Company", x => x.CompanyId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Professor",
                 columns: table => new
                 {
-                    ProfessorId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    ProfessorId = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Contact = table.Column<string>(nullable: false)
                 },
@@ -182,11 +166,30 @@ namespace stagesDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Company",
+                columns: table => new
+                {
+                    CompanyId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Address = table.Column<string>(nullable: false),
+                    Contact = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Company", x => x.CompanyId);
+                    table.ForeignKey(
+                        name: "FK_Company_AspNetUsers_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Proposal",
                 columns: table => new
                 {
-                    ProposalId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    ProposalId = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
                     Date = table.Column<DateTime>(nullable: false),
@@ -195,9 +198,9 @@ namespace stagesDEIS.Data.Migrations
                     Location = table.Column<string>(nullable: false),
                     Branch = table.Column<int>(nullable: false),
                     Objectives = table.Column<string>(maxLength: 200, nullable: false),
-                    ProfessorId = table.Column<int>(nullable: false),
-                    CompanyId = table.Column<int>(nullable: false),
-                    PlacedId = table.Column<int>(nullable: false),
+                    ProfessorId = table.Column<string>(nullable: true),
+                    CompanyId = table.Column<string>(nullable: true),
+                    PlacedId = table.Column<string>(nullable: true),
                     Justification = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
@@ -208,26 +211,25 @@ namespace stagesDEIS.Data.Migrations
                         column: x => x.CompanyId,
                         principalTable: "Company",
                         principalColumn: "CompanyId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Proposal_Professor_ProfessorId",
                         column: x => x.ProfessorId,
                         principalTable: "Professor",
                         principalColumn: "ProfessorId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Student",
                 columns: table => new
                 {
-                    StudentId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    StudentId = table.Column<string>(nullable: false),
                     Branch = table.Column<int>(nullable: false),
                     UnfinishedGrades = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Contact = table.Column<string>(nullable: false),
-                    ProposalId = table.Column<int>(nullable: true)
+                    ProposalId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -244,11 +246,10 @@ namespace stagesDEIS.Data.Migrations
                 name: "Grade",
                 columns: table => new
                 {
-                    GradeId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    GradeId = table.Column<string>(nullable: false),
                     Subject = table.Column<string>(nullable: false),
                     Pontuation = table.Column<int>(nullable: false),
-                    StudentId = table.Column<int>(nullable: true)
+                    StudentId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -329,11 +330,15 @@ namespace stagesDEIS.Data.Migrations
                 column: "PlacedId",
                 principalTable: "Student",
                 principalColumn: "StudentId",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Company_AspNetUsers_CompanyId",
+                table: "Company");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Proposal_Student_PlacedId",
                 table: "Proposal");

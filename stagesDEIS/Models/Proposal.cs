@@ -7,7 +7,7 @@ namespace stagesDEIS.Models
 {
     public class Proposal
     {
-        public int ProposalId { get; set; }
+        public string ProposalId { get; set; }
 
         [Required(ErrorMessage = "You must provide a title")]
         [DataType(DataType.Text)]
@@ -42,19 +42,19 @@ namespace stagesDEIS.Models
         public Professor Professor { get; set; }
 
         [ForeignKey("Professor")]
-        public int ProfessorId { get; set; }
+        public string ProfessorId { get; set; }
 
         public IList<Student> Candidates { get; set; }
 
         public Company Company { get; set; }
 
         [ForeignKey("Company")]
-        public int CompanyId { get; set; }
+        public string CompanyId { get; set; }
 
         public Student Placed { get; set; }
 
         [ForeignKey("Student")]
-        public int PlacedId { get; set; }
+        public string PlacedId { get; set; }
 
         [DataType(DataType.MultilineText)]
         [StringLength(100, MinimumLength = 10, ErrorMessage = "Justification must be between 10 and 100 chars")]
