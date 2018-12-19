@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +17,11 @@ namespace stagesDEIS.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -42,6 +46,7 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
+            applicationUser.Roles = string.Join("; ", await _userManager.GetRolesAsync(applicationUser));
             return View(applicationUser);
         }
 
@@ -104,8 +109,7 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var applicationUser = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
                 return NotFound();

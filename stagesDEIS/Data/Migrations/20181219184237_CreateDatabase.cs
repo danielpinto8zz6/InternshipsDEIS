@@ -39,24 +39,12 @@ namespace stagesDEIS.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Roles = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Professor",
-                columns: table => new
-                {
-                    ProfessorId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Contact = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Professor", x => x.ProfessorId);
                 });
 
             migrationBuilder.CreateTable(
@@ -186,6 +174,67 @@ namespace stagesDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Professor",
+                columns: table => new
+                {
+                    ProfessorId = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Contact = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Professor", x => x.ProfessorId);
+                    table.ForeignKey(
+                        name: "FK_Professor_AspNetUsers_ProfessorId",
+                        column: x => x.ProfessorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Student",
+                columns: table => new
+                {
+                    StudentId = table.Column<string>(nullable: false),
+                    Branch = table.Column<int>(nullable: false),
+                    UnfinishedGrades = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Contact = table.Column<string>(nullable: false),
+                    ProposalId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Student", x => x.StudentId);
+                    table.ForeignKey(
+                        name: "FK_Student_AspNetUsers_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Grade",
+                columns: table => new
+                {
+                    GradeId = table.Column<string>(nullable: false),
+                    Subject = table.Column<string>(nullable: false),
+                    Pontuation = table.Column<int>(nullable: false),
+                    StudentId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grade", x => x.GradeId);
+                    table.ForeignKey(
+                        name: "FK_Grade_Student_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Student",
+                        principalColumn: "StudentId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Proposal",
                 columns: table => new
                 {
@@ -213,52 +262,16 @@ namespace stagesDEIS.Data.Migrations
                         principalColumn: "CompanyId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Proposal_Student_PlacedId",
+                        column: x => x.PlacedId,
+                        principalTable: "Student",
+                        principalColumn: "StudentId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Proposal_Professor_ProfessorId",
                         column: x => x.ProfessorId,
                         principalTable: "Professor",
                         principalColumn: "ProfessorId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Student",
-                columns: table => new
-                {
-                    StudentId = table.Column<string>(nullable: false),
-                    Branch = table.Column<int>(nullable: false),
-                    UnfinishedGrades = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Contact = table.Column<string>(nullable: false),
-                    ProposalId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Student", x => x.StudentId);
-                    table.ForeignKey(
-                        name: "FK_Student_Proposal_ProposalId",
-                        column: x => x.ProposalId,
-                        principalTable: "Proposal",
-                        principalColumn: "ProposalId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Grade",
-                columns: table => new
-                {
-                    GradeId = table.Column<string>(nullable: false),
-                    Subject = table.Column<string>(nullable: false),
-                    Pontuation = table.Column<int>(nullable: false),
-                    StudentId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Grade", x => x.GradeId);
-                    table.ForeignKey(
-                        name: "FK_Grade_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "StudentId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -325,11 +338,11 @@ namespace stagesDEIS.Data.Migrations
                 column: "ProposalId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Proposal_Student_PlacedId",
-                table: "Proposal",
-                column: "PlacedId",
-                principalTable: "Student",
-                principalColumn: "StudentId",
+                name: "FK_Student_Proposal_ProposalId",
+                table: "Student",
+                column: "ProposalId",
+                principalTable: "Proposal",
+                principalColumn: "ProposalId",
                 onDelete: ReferentialAction.Restrict);
         }
 
@@ -338,6 +351,14 @@ namespace stagesDEIS.Data.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Company_AspNetUsers_CompanyId",
                 table: "Company");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Professor_AspNetUsers_ProfessorId",
+                table: "Professor");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Student_AspNetUsers_StudentId",
+                table: "Student");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Proposal_Student_PlacedId",

@@ -9,7 +9,7 @@ using stagesDEIS.Data;
 namespace stagesDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181218212014_CreateDatabase")]
+    [Migration("20181219184237_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,6 +156,8 @@ namespace stagesDEIS.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
+                    b.Property<string>("Roles");
+
                     b.Property<string>("SecurityStamp");
 
                     b.Property<bool>("TwoFactorEnabled");
@@ -215,8 +217,7 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Professor", b =>
                 {
-                    b.Property<string>("ProfessorId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("ProfessorId");
 
                     b.Property<string>("Contact")
                         .IsRequired();
@@ -278,8 +279,7 @@ namespace stagesDEIS.Data.Migrations
 
             modelBuilder.Entity("stagesDEIS.Models.Student", b =>
                 {
-                    b.Property<string>("StudentId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("StudentId");
 
                     b.Property<int>("Branch");
 
@@ -361,6 +361,14 @@ namespace stagesDEIS.Data.Migrations
                         .HasForeignKey("StudentId");
                 });
 
+            modelBuilder.Entity("stagesDEIS.Models.Professor", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.ApplicationUser", "User")
+                        .WithOne("Professor")
+                        .HasForeignKey("stagesDEIS.Models.Professor", "ProfessorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
                 {
                     b.HasOne("stagesDEIS.Models.Company", "Company")
@@ -381,6 +389,11 @@ namespace stagesDEIS.Data.Migrations
                     b.HasOne("stagesDEIS.Models.Proposal")
                         .WithMany("Candidates")
                         .HasForeignKey("ProposalId");
+
+                    b.HasOne("stagesDEIS.Models.ApplicationUser", "User")
+                        .WithOne("Student")
+                        .HasForeignKey("stagesDEIS.Models.Student", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -6,6 +6,7 @@ namespace stagesDEIS.Models
 {
     public class Student
     {
+        [ForeignKey("User")]
         public string StudentId { get; set; }
 
         [NotMapped]
@@ -29,5 +30,7 @@ namespace stagesDEIS.Models
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
         public string Contact { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
     }
 }
