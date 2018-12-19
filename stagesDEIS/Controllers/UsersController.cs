@@ -23,6 +23,13 @@ namespace stagesDEIS.Controllers
         {
             _userManager = userManager;
             _context = context;
+
+            // Assign roles to users
+            _context.Users.ToList().Select(async user =>
+            {
+                var userEntity = await _userManager.FindByIdAsync(user.Id);
+                user.Roles = string.Join("; ", await _userManager.GetRolesAsync(userEntity));
+            }).ToList();
         }
 
         // GET: Users
@@ -46,7 +53,6 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
-            applicationUser.Roles = string.Join("; ", await _userManager.GetRolesAsync(applicationUser));
             return View(applicationUser);
         }
 
