@@ -41,10 +41,6 @@ namespace stagesDEIS
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            // services.AddDefaultIdentity<IdentityUser>()
-            //     .AddDefaultUI(UIFramework.Bootstrap4)
-            //     .AddEntityFrameworkStores<ApplicationDbContext>();
-
             services.AddIdentity<ApplicationUser, IdentityRole>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultUI(UIFramework.Bootstrap4)

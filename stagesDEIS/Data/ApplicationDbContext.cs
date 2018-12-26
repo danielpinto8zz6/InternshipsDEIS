@@ -27,5 +27,7 @@ namespace stagesDEIS.Data
         public DbSet<stagesDEIS.Models.Student> Student { get; set; }
 
         public DbSet<stagesDEIS.Models.Professor> Professor { get; set; }
+
+        public DbSet<stagesDEIS.Models.Candidature> Candidature { get; set; }
     }
 }

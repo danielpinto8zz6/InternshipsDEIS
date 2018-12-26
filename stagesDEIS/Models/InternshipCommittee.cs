@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace stagesDEIS.Models
 {
@@ -9,8 +10,9 @@ namespace stagesDEIS.Models
 
         public IList<Professor> Professors { get; set; }
 
-        public Proposal Proposal { get; set; }
+        [ForeignKey("Proposal")]
         public int ProposalId { get; set; }
+        public Proposal Proposal { get; set; }
 
         public Statistics Statistics { get; }
 

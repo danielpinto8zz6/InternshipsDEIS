@@ -175,6 +175,34 @@ namespace stagesDEIS.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("stagesDEIS.Models.Candidature", b =>
+                {
+                    b.Property<string>("CandidatureId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Branch");
+
+                    b.Property<string>("Grades")
+                        .IsRequired();
+
+                    b.Property<string>("ProposalId");
+
+                    b.Property<int>("Result");
+
+                    b.Property<string>("StudentId");
+
+                    b.Property<string>("UnfinishedGrades")
+                        .IsRequired();
+
+                    b.HasKey("CandidatureId");
+
+                    b.HasIndex("ProposalId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Candidature");
+                });
+
             modelBuilder.Entity("stagesDEIS.Models.Company", b =>
                 {
                     b.Property<string>("CompanyId");
@@ -342,6 +370,17 @@ namespace stagesDEIS.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Candidature", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.Proposal", "Proposal")
+                        .WithMany()
+                        .HasForeignKey("ProposalId");
+
+                    b.HasOne("stagesDEIS.Models.ApplicationUser", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
                 });
 
             modelBuilder.Entity("stagesDEIS.Models.Company", b =>

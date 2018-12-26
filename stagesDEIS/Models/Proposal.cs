@@ -17,8 +17,7 @@ namespace stagesDEIS.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{e:dd/mm/yyyy}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         public State State { get; set; }
@@ -59,5 +58,11 @@ namespace stagesDEIS.Models
         [DataType(DataType.MultilineText)]
         [StringLength(100, MinimumLength = 10, ErrorMessage = "Justification must be between 10 and 100 chars")]
         public string Justification { get; set; }
+
+        public Proposal()
+        {
+            State = State.STANDBY;
+            Candidates = new List<Student>();
+        }
     }
 }
