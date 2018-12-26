@@ -10,9 +10,9 @@ namespace stagesDEIS.Models
 
         public IList<Professor> Professors { get; set; }
 
-        [ForeignKey("Proposal")]
-        public int ProposalId { get; set; }
-        public Proposal Proposal { get; set; }
+        // [ForeignKey("Proposal")]
+        // public int ProposalId { get; set; }
+        // public Proposal Proposal { get; set; }
 
         public Statistics Statistics { get; }
 

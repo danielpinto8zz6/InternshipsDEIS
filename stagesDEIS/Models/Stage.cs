@@ -5,9 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace stagesDEIS.Models
 {
-    public class Proposal
+    public class Stage
     {
-        public string ProposalId { get; set; }
+        public string StageId { get; set; }
 
         [Required(ErrorMessage = "You must provide a title")]
         [DataType(DataType.Text)]
@@ -26,7 +26,7 @@ namespace stagesDEIS.Models
         [DataType(DataType.MultilineText)]
         public string AccessConditions { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "You must specify stage location")]
         [DataType(DataType.MultilineText)]
         public string Location { get; set; }
 
@@ -35,34 +35,27 @@ namespace stagesDEIS.Models
 
         [Required(ErrorMessage = "You must provide objectives")]
         [DataType(DataType.MultilineText)]
-        [StringLength(200, MinimumLength = 20, ErrorMessage = "Should be at least 20 characters and at most 200")]
         public string Objectives { get; set; }
 
-        public Professor Professor { get; set; }
+        public Professor Advisor { get; set; }
 
         [ForeignKey("Professor")]
-        public string ProfessorId { get; set; }
+        public string AdvisorId { get; set; }
 
-        public IList<Student> Candidates { get; set; }
+        public IList<StageCandidature> Candidatures { get; set; }
 
         public Company Company { get; set; }
 
         [ForeignKey("Company")]
         public string CompanyId { get; set; }
 
-        public Student Placed { get; set; }
-
-        [ForeignKey("Student")]
-        public string PlacedId { get; set; }
-
         [DataType(DataType.MultilineText)]
-        [StringLength(100, MinimumLength = 10, ErrorMessage = "Justification must be between 10 and 100 chars")]
         public string Justification { get; set; }
 
-        public Proposal()
+        public Stage()
         {
             State = State.STANDBY;
-            Candidates = new List<Student>();
+            Candidatures = new List<StageCandidature>();
         }
     }
 }

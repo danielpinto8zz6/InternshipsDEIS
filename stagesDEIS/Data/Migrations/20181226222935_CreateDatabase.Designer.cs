@@ -9,7 +9,7 @@ using stagesDEIS.Data;
 namespace stagesDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181225194520_CreateDatabase")]
+    [Migration("20181226222935_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,34 +177,6 @@ namespace stagesDEIS.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("stagesDEIS.Models.Candidature", b =>
-                {
-                    b.Property<string>("CandidatureId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Branch");
-
-                    b.Property<string>("Grades")
-                        .IsRequired();
-
-                    b.Property<string>("ProposalId");
-
-                    b.Property<int>("Result");
-
-                    b.Property<string>("StudentId");
-
-                    b.Property<string>("UnfinishedGrades")
-                        .IsRequired();
-
-                    b.HasKey("CandidatureId");
-
-                    b.HasIndex("ProposalId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Candidature");
-                });
-
             modelBuilder.Entity("stagesDEIS.Models.Company", b =>
                 {
                     b.Property<string>("CompanyId");
@@ -253,18 +225,80 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<string>("ProjectId");
+
                     b.HasKey("ProfessorId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Professor");
                 });
 
-            modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
+            modelBuilder.Entity("stagesDEIS.Models.Project", b =>
                 {
-                    b.Property<string>("ProposalId")
+                    b.Property<string>("ProjectId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("AccessConditions")
                         .IsRequired();
+
+                    b.Property<int>("Branch");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description")
+                        .IsRequired();
+
+                    b.Property<string>("Objectives")
+                        .IsRequired();
+
+                    b.Property<int>("State");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("ProjectId");
+
+                    b.ToTable("Project");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.ProjectCandidature", b =>
+                {
+                    b.Property<string>("ProjectCandidatureId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Branch");
+
+                    b.Property<string>("CandidateId");
+
+                    b.Property<string>("Grades")
+                        .IsRequired();
+
+                    b.Property<string>("ProjectId");
+
+                    b.Property<int>("Result");
+
+                    b.Property<string>("UnfinishedGrades")
+                        .IsRequired();
+
+                    b.HasKey("ProjectCandidatureId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectCandidature");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Stage", b =>
+                {
+                    b.Property<string>("StageId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AccessConditions")
+                        .IsRequired();
+
+                    b.Property<string>("AdvisorId");
 
                     b.Property<int>("Branch");
 
@@ -275,34 +309,52 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
-                    b.Property<string>("Justification")
-                        .HasMaxLength(100);
-
                     b.Property<string>("Location")
                         .IsRequired();
 
                     b.Property<string>("Objectives")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<string>("PlacedId");
-
-                    b.Property<string>("ProfessorId");
+                        .IsRequired();
 
                     b.Property<int>("State");
 
                     b.Property<string>("Title")
                         .IsRequired();
 
-                    b.HasKey("ProposalId");
+                    b.HasKey("StageId");
+
+                    b.HasIndex("AdvisorId");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("PlacedId");
+                    b.ToTable("Stage");
+                });
 
-                    b.HasIndex("ProfessorId");
+            modelBuilder.Entity("stagesDEIS.Models.StageCandidature", b =>
+                {
+                    b.Property<string>("StageCandidatureId")
+                        .ValueGeneratedOnAdd();
 
-                    b.ToTable("Proposal");
+                    b.Property<int>("Branch");
+
+                    b.Property<string>("CandidateId");
+
+                    b.Property<string>("Grades")
+                        .IsRequired();
+
+                    b.Property<int>("Result");
+
+                    b.Property<string>("StageId");
+
+                    b.Property<string>("UnfinishedGrades")
+                        .IsRequired();
+
+                    b.HasKey("StageCandidatureId");
+
+                    b.HasIndex("CandidateId");
+
+                    b.HasIndex("StageId");
+
+                    b.ToTable("StageCandidature");
                 });
 
             modelBuilder.Entity("stagesDEIS.Models.Student", b =>
@@ -317,14 +369,10 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("ProposalId");
-
                     b.Property<string>("UnfinishedGrades")
                         .IsRequired();
 
                     b.HasKey("StudentId");
-
-                    b.HasIndex("ProposalId");
 
                     b.ToTable("Student");
                 });
@@ -374,17 +422,6 @@ namespace stagesDEIS.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("stagesDEIS.Models.Candidature", b =>
-                {
-                    b.HasOne("stagesDEIS.Models.Proposal", "Proposal")
-                        .WithMany()
-                        .HasForeignKey("ProposalId");
-
-                    b.HasOne("stagesDEIS.Models.ApplicationUser", "Candidate")
-                        .WithMany()
-                        .HasForeignKey("StudentId");
-                });
-
             modelBuilder.Entity("stagesDEIS.Models.Company", b =>
                 {
                     b.HasOne("stagesDEIS.Models.ApplicationUser", "User")
@@ -406,29 +443,47 @@ namespace stagesDEIS.Data.Migrations
                         .WithOne("Professor")
                         .HasForeignKey("stagesDEIS.Models.Professor", "ProfessorId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("stagesDEIS.Models.Project")
+                        .WithMany("Professors")
+                        .HasForeignKey("ProjectId");
                 });
 
-            modelBuilder.Entity("stagesDEIS.Models.Proposal", b =>
+            modelBuilder.Entity("stagesDEIS.Models.ProjectCandidature", b =>
                 {
+                    b.HasOne("stagesDEIS.Models.ApplicationUser", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId");
+
+                    b.HasOne("stagesDEIS.Models.Project", "Project")
+                        .WithMany("Candidatures")
+                        .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("stagesDEIS.Models.Stage", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.Professor", "Advisor")
+                        .WithMany()
+                        .HasForeignKey("AdvisorId");
+
                     b.HasOne("stagesDEIS.Models.Company", "Company")
-                        .WithMany("Proposals")
+                        .WithMany()
                         .HasForeignKey("CompanyId");
+                });
 
-                    b.HasOne("stagesDEIS.Models.Student", "Placed")
+            modelBuilder.Entity("stagesDEIS.Models.StageCandidature", b =>
+                {
+                    b.HasOne("stagesDEIS.Models.ApplicationUser", "Candidate")
                         .WithMany()
-                        .HasForeignKey("PlacedId");
+                        .HasForeignKey("CandidateId");
 
-                    b.HasOne("stagesDEIS.Models.Professor", "Professor")
-                        .WithMany()
-                        .HasForeignKey("ProfessorId");
+                    b.HasOne("stagesDEIS.Models.Stage", "Stage")
+                        .WithMany("Candidatures")
+                        .HasForeignKey("StageId");
                 });
 
             modelBuilder.Entity("stagesDEIS.Models.Student", b =>
                 {
-                    b.HasOne("stagesDEIS.Models.Proposal")
-                        .WithMany("Candidates")
-                        .HasForeignKey("ProposalId");
-
                     b.HasOne("stagesDEIS.Models.ApplicationUser", "User")
                         .WithOne("Student")
                         .HasForeignKey("stagesDEIS.Models.Student", "StudentId")

@@ -5,19 +5,19 @@ using Microsoft.AspNetCore.Identity;
 
 namespace stagesDEIS.Models
 {
-    public class Candidature
+    public class StageCandidature
     {
-        public string CandidatureId { get; set; }
+        public string StageCandidatureId { get; set; }
 
         [ForeignKey("Candidate")]
-        public string StudentId { get; set; }
+        public string CandidateId { get; set; }
 
         public virtual ApplicationUser Candidate { get; set; }
 
-        [ForeignKey("Proposal")]
-        public string ProposalId { get; set; }
+        [ForeignKey("Stage")]
+        public string StageId { get; set; }
 
-        public Proposal Proposal { get; set; }
+        public Stage Stage { get; set; }
 
         [Required(ErrorMessage = "You must choose a branch")]
         public Branch Branch { get; set; }
@@ -32,7 +32,7 @@ namespace stagesDEIS.Models
 
         public State Result { get; set; }
 
-        public Candidature()
+        public StageCandidature()
         {
             Result = State.STANDBY;
         }

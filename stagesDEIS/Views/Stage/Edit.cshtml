@@ -1,4 +1,4 @@
-@model stagesDEIS.Models.Proposal
+@model stagesDEIS.Models.Stage
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,13 +6,13 @@
 
 <h1>Edit</h1>
 
-<h4>Proposal</h4>
+<h4>Stage</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProposalId" />
+            <input type="hidden" asp-for="StageId" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -22,16 +22,6 @@
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="State" class="control-label"></label>
-                <select asp-for="State" class="form-control"></select>
-                <span asp-validation-for="State" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="AccessConditions" class="control-label"></label>
@@ -54,24 +44,14 @@
                 <span asp-validation-for="Objectives" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProfessorId" class="control-label"></label>
-                <select asp-for="ProfessorId" class="form-control" asp-items="ViewBag.ProfessorId"></select>
-                <span asp-validation-for="ProfessorId" class="text-danger"></span>
+                <label asp-for="AdvisorId" class="control-label"></label>
+                <select asp-for="AdvisorId" class="form-control" asp-items="ViewBag.AdvisorId"></select>
+                <span asp-validation-for="AdvisorId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CompanyId" class="control-label"></label>
                 <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PlacedId" class="control-label"></label>
-                <select asp-for="PlacedId" class="form-control" asp-items="ViewBag.PlacedId"></select>
-                <span asp-validation-for="PlacedId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Justification" class="control-label"></label>
-                <textarea asp-for="Justification" class="form-control"></textarea>
-                <span asp-validation-for="Justification" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

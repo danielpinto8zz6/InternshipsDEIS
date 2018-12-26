@@ -10,8 +10,6 @@ namespace stagesDEIS.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Models.Proposal> Proposal { get; set; }
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -28,6 +26,12 @@ namespace stagesDEIS.Data
 
         public DbSet<stagesDEIS.Models.Professor> Professor { get; set; }
 
-        public DbSet<stagesDEIS.Models.Candidature> Candidature { get; set; }
+        public DbSet<stagesDEIS.Models.Project> Project { get; set; }
+
+        public DbSet<stagesDEIS.Models.Stage> Stage { get; set; }
+
+        public DbSet<stagesDEIS.Models.StageCandidature> StageCandidature { get; set; }
+
+        public DbSet<stagesDEIS.Models.ProjectCandidature> ProjectCandidature { get; set; }
     }
 }

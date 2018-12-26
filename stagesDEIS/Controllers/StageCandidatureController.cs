@@ -12,72 +12,43 @@ using stagesDEIS.Models;
 
 namespace stagesDEIS.Controllers
 {
-    public class CandidatureController : Controller
+    public class StageCandidatureController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CandidatureController(ApplicationDbContext context)
+        public StageCandidatureController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Candidature
+        // GET: StageCandidature
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Candidature.Include(c => c.Proposal).Include(c => c.Candidate);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.StageCandidature.Include(s => s.Candidate).Include(s => s.Stage);
+
+            if (User.IsInRole("Student"))
+            {
+                return View(await applicationDbContext.Where(s => s.Candidate.Id.Equals(GetUserId())).ToListAsync());
+            }
+            else if (User.IsInRole("Company"))
+            {
+                return View(await applicationDbContext.Where(s => s.Stage.CompanyId.Equals(GetUserId())).ToListAsync());
+            }
+            else if (User.IsInRole("Professor"))
+            {
+                return View(await applicationDbContext.Where(s => s.Stage.Advisor.Equals(GetUserId())).ToListAsync());
+            }
+            else if (User.IsInRole("Administrator"))
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        [Authorize(Roles = "Professor,Company")]
-        public async Task<IActionResult> Accept(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var candidature = await _context.Candidature
-                .Include(c => c.Proposal)
-                .Include(c => c.Candidate)
-                .FirstOrDefaultAsync(m => m.CandidatureId == id);
-            if (candidature == null)
-            {
-                return NotFound();
-            }
-
-            candidature.Result = State.ACCEPTED;
-
-            _context.Update(candidature);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        [Authorize(Roles = "Professor,Company")]
-        public async Task<IActionResult> Reject(string id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var candidature = await _context.Candidature
-                .Include(c => c.Proposal)
-                .Include(c => c.Candidate)
-                .FirstOrDefaultAsync(m => m.CandidatureId == id);
-            if (candidature == null)
-            {
-                return NotFound();
-            }
-
-            candidature.Result = State.REJECTED;
-
-            _context.Update(candidature);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-
+        // GET: StageCandidature/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -85,18 +56,19 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
-            var candidature = await _context.Candidature
-                .Include(c => c.Proposal)
-                .Include(c => c.Candidate)
-                .FirstOrDefaultAsync(m => m.CandidatureId == id);
-            if (candidature == null)
+            var stageCandidature = await _context.StageCandidature
+                .Include(s => s.Candidate)
+                .Include(s => s.Stage)
+                .FirstOrDefaultAsync(m => m.StageCandidatureId == id);
+            if (stageCandidature == null)
             {
                 return NotFound();
             }
 
-            return View(candidature);
+            return View(stageCandidature);
         }
 
+        // GET: StageCandidature/Create
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Create(string id)
         {
@@ -105,9 +77,8 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
-            var proposal = await _context.Proposal.FindAsync(id);
-
-            if (proposal == null)
+            var stage = await _context.Stage.FindAsync(id);
+            if (stage == null)
             {
                 return NotFound();
             }
@@ -115,25 +86,26 @@ namespace stagesDEIS.Controllers
             return View();
         }
 
-        // POST: Candidature/Create
+        // POST: StageCandidature/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string id, [Bind("CandidatureId,Branch,Grades,UnfinishedGrades")] Candidature candidature)
+        public async Task<IActionResult> Create(string id, [Bind("StageCandidatureId,StudentId,StageId,Branch,Grades,UnfinishedGrades,Result")] StageCandidature stageCandidature)
         {
             if (ModelState.IsValid)
             {
-                candidature.StudentId = GetUserId();
-                candidature.ProposalId = id;
-                _context.Add(candidature);
+                stageCandidature.CandidateId = GetUserId();
+                stageCandidature.StageId = id;
+                _context.Add(stageCandidature);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(candidature);
+            return View(stageCandidature);
         }
 
+        // GET: StageCandidature/Edit/5
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Edit(string id)
         {
@@ -142,24 +114,23 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
-            var candidature = await _context.Candidature.FindAsync(id);
-            if (candidature == null)
+            var stageCandidature = await _context.StageCandidature.FindAsync(id);
+            if (stageCandidature == null)
             {
                 return NotFound();
             }
-
-            return View(candidature);
+            return View(stageCandidature);
         }
 
-        // POST: Candidature/Edit/5
+        // POST: StageCandidature/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("CandidatureId,Branch,Grades,UnfinishedGrades")] Candidature candidature)
+        public async Task<IActionResult> Edit(string id, [Bind("StageCandidatureId,StudentId,StageId,Branch,Grades,UnfinishedGrades,Result")] StageCandidature stageCandidature)
         {
-            if (id != candidature.CandidatureId)
+            if (id != stageCandidature.StageCandidatureId)
             {
                 return NotFound();
             }
@@ -168,12 +139,12 @@ namespace stagesDEIS.Controllers
             {
                 try
                 {
-                    _context.Update(candidature);
+                    _context.Update(stageCandidature);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CandidatureExists(candidature.CandidatureId))
+                    if (!StageCandidatureExists(stageCandidature.StageCandidatureId))
                     {
                         return NotFound();
                     }
@@ -184,9 +155,10 @@ namespace stagesDEIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(candidature);
+            return View(stageCandidature);
         }
 
+        // GET: StageCandidature/Delete/5
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -195,32 +167,33 @@ namespace stagesDEIS.Controllers
                 return NotFound();
             }
 
-            var candidature = await _context.Candidature
-                .Include(c => c.Proposal)
-                .Include(c => c.Candidate)
-                .FirstOrDefaultAsync(m => m.CandidatureId == id);
-            if (candidature == null)
+            var stageCandidature = await _context.StageCandidature
+                .Include(s => s.Candidate)
+                .Include(s => s.Stage)
+                .FirstOrDefaultAsync(m => m.StageCandidatureId == id);
+            if (stageCandidature == null)
             {
                 return NotFound();
             }
 
-            return View(candidature);
+            return View(stageCandidature);
         }
 
+        // POST: StageCandidature/Delete/5
         [Authorize(Roles = "Student")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var candidature = await _context.Candidature.FindAsync(id);
-            _context.Candidature.Remove(candidature);
+            var stageCandidature = await _context.StageCandidature.FindAsync(id);
+            _context.StageCandidature.Remove(stageCandidature);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CandidatureExists(string id)
+        private bool StageCandidatureExists(string id)
         {
-            return _context.Candidature.Any(e => e.CandidatureId == id);
+            return _context.StageCandidature.Any(e => e.StageCandidatureId == id);
         }
 
         private string GetUserId()

@@ -103,6 +103,8 @@ namespace stagesDEIS.Areas.Identity.Pages.Account
 
                     await _userManager.AddToRoleAsync(user, Input.Role);
 
+                    await _signInManager.SignInAsync(user, false);
+
                     return LocalRedirect(returnUrl);
                 }
 

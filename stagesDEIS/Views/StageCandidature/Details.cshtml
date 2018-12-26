@@ -1,4 +1,4 @@
-@model stagesDEIS.Models.Candidature
+@model stagesDEIS.Models.StageCandidature
 
 @{
     ViewData["Title"] = "Details";
@@ -7,9 +7,21 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Candidature</h4>
+    <h4>StageCandidature</h4>
     <hr />
     <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Candidate)
+        </dt>
+        <dd class = "col-sm-10">
+            <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.Candidate.Id">@Html.DisplayFor(model => model.Candidate.UserName)</a>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Stage)
+        </dt>
+        <dd class = "col-sm-10">
+            <a asp-action="Details" asp-controller="Stage" asp-route-id="@Model.StageId">@Html.DisplayFor(model => model.Stage.Title)</a>
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Branch)
         </dt>
@@ -29,20 +41,14 @@
             @Html.DisplayFor(model => model.UnfinishedGrades)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Candidate)
+            @Html.DisplayNameFor(model => model.Result)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Candidate.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Proposal)
-        </dt>
-        <dd class = "col-sm-10">
-            <a class="btn btn-primary btn-sm" asp-controller="Proposal" asp-action="Details" asp-route-id="model.ProposalId">Proposal</a>
+            @Html.DisplayFor(model => model.Result)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.CandidatureId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.StageCandidatureId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

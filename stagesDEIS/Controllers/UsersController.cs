@@ -10,10 +10,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using stagesDEIS.Data;
 using stagesDEIS.Models;
-
+    
 namespace stagesDEIS.Controllers
 {
-    [Authorize(Roles = "Administrator")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -32,7 +31,7 @@ namespace stagesDEIS.Controllers
             }).ToList();
         }
 
-        // GET: Users
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Users.ToListAsync());
@@ -56,7 +55,7 @@ namespace stagesDEIS.Controllers
             return View(applicationUser);
         }
 
-        // GET: Users/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -75,6 +74,7 @@ namespace stagesDEIS.Controllers
         // POST: Users/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
@@ -108,6 +108,7 @@ namespace stagesDEIS.Controllers
         }
 
         // GET: Users/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -125,6 +126,7 @@ namespace stagesDEIS.Controllers
         }
 
         // POST: Users/Delete/5
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

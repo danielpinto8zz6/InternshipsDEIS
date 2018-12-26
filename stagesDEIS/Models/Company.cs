@@ -23,7 +23,7 @@ namespace stagesDEIS.Models
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$", ErrorMessage = "Not a valid phone number")]
         public string Contact { get; set; }
 
-        public IList<Proposal> Proposals { get; set; }
+        // public IList<Proposal> Proposals { get; set; }
 
         public virtual ApplicationUser User { get; set; }
     }

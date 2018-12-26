@@ -9,8 +9,8 @@ namespace stagesDEIS.Models
         [ForeignKey("User")]
         public string StudentId { get; set; }
 
-        [NotMapped]
-        public IList<Proposal> Application { get; set; }
+        // [NotMapped]
+        // public IList<Proposal> Application { get; set; }
 
         [Required(ErrorMessage = "You must choose a branch")]
         public Branch Branch { get; set; }

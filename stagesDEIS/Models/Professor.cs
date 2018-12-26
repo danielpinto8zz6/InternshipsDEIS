@@ -16,7 +16,7 @@ namespace stagesDEIS.Models
 
         [Required(ErrorMessage = "You must provide a phone number")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$", ErrorMessage = "Not a valid phone number")]
         public string Contact { get; set; }
 
         public virtual ApplicationUser User { get; set; }
