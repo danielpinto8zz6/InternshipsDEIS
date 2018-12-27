@@ -76,10 +76,10 @@
                 @Html.DisplayFor(modelItem => item.Objectives)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Advisor.ProfessorId)
+                @Html.DisplayFor(modelItem => item.Advisor.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Company.CompanyId)
+                @Html.DisplayFor(modelItem => item.Company.Id)
             </td>
             <td>
             @if (this.User.IsInRole("Student"))

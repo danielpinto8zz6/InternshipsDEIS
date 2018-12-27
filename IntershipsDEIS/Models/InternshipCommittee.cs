@@ -8,7 +8,7 @@ namespace IntershipsDEIS.Models
     {
         public string InternshipCommitteeId { get; set; }
 
-        public IList<Professor> Professors { get; set; }
+        public IList<ApplicationUser> Professors { get; set; }
 
         // [ForeignKey("Proposal")]
         // public int ProposalId { get; set; }

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntershipsDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181227152407_CreateDatabase")]
+    [Migration("20181227183410_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,8 @@ namespace IntershipsDEIS.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
+                    b.Property<string>("Name");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
 
@@ -49,7 +51,9 @@ namespace IntershipsDEIS.Data.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("Roles");
+                    b.Property<string>("ProjectId");
+
+                    b.Property<string>("Role");
 
                     b.Property<string>("SecurityStamp");
 
@@ -67,45 +71,9 @@ namespace IntershipsDEIS.Data.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
+                    b.HasIndex("ProjectId");
+
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("IntershipsDEIS.Models.Company", b =>
-                {
-                    b.Property<string>("CompanyId");
-
-                    b.Property<string>("Address")
-                        .IsRequired();
-
-                    b.Property<string>("Contact")
-                        .IsRequired();
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.HasKey("CompanyId");
-
-                    b.ToTable("Company");
-                });
-
-            modelBuilder.Entity("IntershipsDEIS.Models.Grade", b =>
-                {
-                    b.Property<string>("GradeId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Pontuation");
-
-                    b.Property<string>("StudentId");
-
-                    b.Property<string>("Subject")
-                        .IsRequired();
-
-                    b.HasKey("GradeId");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("Grade");
                 });
 
             modelBuilder.Entity("IntershipsDEIS.Models.Intership", b =>
@@ -206,25 +174,6 @@ namespace IntershipsDEIS.Data.Migrations
                     b.ToTable("Message");
                 });
 
-            modelBuilder.Entity("IntershipsDEIS.Models.Professor", b =>
-                {
-                    b.Property<string>("ProfessorId");
-
-                    b.Property<string>("Contact")
-                        .IsRequired();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<string>("ProjectId");
-
-                    b.HasKey("ProfessorId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Professor");
-                });
-
             modelBuilder.Entity("IntershipsDEIS.Models.Project", b =>
                 {
                     b.Property<string>("ProjectId")
@@ -281,26 +230,6 @@ namespace IntershipsDEIS.Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("ProjectCandidature");
-                });
-
-            modelBuilder.Entity("IntershipsDEIS.Models.Student", b =>
-                {
-                    b.Property<string>("StudentId");
-
-                    b.Property<int>("Branch");
-
-                    b.Property<string>("Contact")
-                        .IsRequired();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
-
-                    b.Property<string>("UnfinishedGrades")
-                        .IsRequired();
-
-                    b.HasKey("StudentId");
-
-                    b.ToTable("Student");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -410,28 +339,20 @@ namespace IntershipsDEIS.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("IntershipsDEIS.Models.Company", b =>
+            modelBuilder.Entity("IntershipsDEIS.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "User")
-                        .WithOne("Company")
-                        .HasForeignKey("IntershipsDEIS.Models.Company", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("IntershipsDEIS.Models.Grade", b =>
-                {
-                    b.HasOne("IntershipsDEIS.Models.Student")
-                        .WithMany("Grades")
-                        .HasForeignKey("StudentId");
+                    b.HasOne("IntershipsDEIS.Models.Project")
+                        .WithMany("Professors")
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("IntershipsDEIS.Models.Intership", b =>
                 {
-                    b.HasOne("IntershipsDEIS.Models.Professor", "Advisor")
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Advisor")
                         .WithMany()
                         .HasForeignKey("AdvisorId");
 
-                    b.HasOne("IntershipsDEIS.Models.Company", "Company")
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId");
                 });
@@ -459,18 +380,6 @@ namespace IntershipsDEIS.Data.Migrations
                         .HasForeignKey("SenderId");
                 });
 
-            modelBuilder.Entity("IntershipsDEIS.Models.Professor", b =>
-                {
-                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "User")
-                        .WithOne("Professor")
-                        .HasForeignKey("IntershipsDEIS.Models.Professor", "ProfessorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("IntershipsDEIS.Models.Project")
-                        .WithMany("Professors")
-                        .HasForeignKey("ProjectId");
-                });
-
             modelBuilder.Entity("IntershipsDEIS.Models.ProjectCandidature", b =>
                 {
                     b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Candidate")
@@ -480,14 +389,6 @@ namespace IntershipsDEIS.Data.Migrations
                     b.HasOne("IntershipsDEIS.Models.Project", "Project")
                         .WithMany("Candidatures")
                         .HasForeignKey("ProjectId");
-                });
-
-            modelBuilder.Entity("IntershipsDEIS.Models.Student", b =>
-                {
-                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "User")
-                        .WithOne("Student")
-                        .HasForeignKey("IntershipsDEIS.Models.Student", "StudentId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

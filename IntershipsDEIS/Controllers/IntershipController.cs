@@ -60,8 +60,8 @@ namespace IntershipsDEIS.Controllers
         [Authorize(Roles = "Company")]
         public IActionResult Create()
         {
-            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "Name");
-            ViewData["CompanyId"] = new SelectList(_context.Company, "CompanyId", "CompanyId");
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName");
+            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Company")).ToList(), "Id", "UserName");
             return View();
         }
 
@@ -75,18 +75,12 @@ namespace IntershipsDEIS.Controllers
         {
             if (ModelState.IsValid)
             {
-                var company = await _context.Company.FindAsync(GetUserId());
-                if (company == null)
-                {
-                    return RedirectToAction("Create", "Company");
-                }
-
                 _context.Add(Intership);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "Name", Intership.AdvisorId);
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName", Intership.AdvisorId);
 
             return View(Intership);
         }
@@ -105,8 +99,8 @@ namespace IntershipsDEIS.Controllers
             {
                 return NotFound();
             }
-            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "ProfessorId", Intership.AdvisorId);
-            ViewData["CompanyId"] = new SelectList(_context.Company, "CompanyId", "CompanyId", Intership.CompanyId);
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName", Intership.AdvisorId);
+            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Company")).ToList(), "Id", "UserName", Intership.CompanyId);
             return View(Intership);
         }
 
@@ -143,8 +137,8 @@ namespace IntershipsDEIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "ProfessorId", Intership.AdvisorId);
-            ViewData["CompanyId"] = new SelectList(_context.Company, "CompanyId", "CompanyId", Intership.CompanyId);
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName", Intership.AdvisorId);
+            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Company")).ToList(), "Id", "UserName", Intership.CompanyId);
             return View(Intership);
         }
 

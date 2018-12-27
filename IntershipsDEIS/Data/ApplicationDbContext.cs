@@ -20,12 +20,6 @@ namespace IntershipsDEIS.Data
             base.OnModelCreating(builder);
         }
 
-        public DbSet<IntershipsDEIS.Models.Company> Company { get; set; }
-
-        public DbSet<IntershipsDEIS.Models.Student> Student { get; set; }
-
-        public DbSet<IntershipsDEIS.Models.Professor> Professor { get; set; }
-
         public DbSet<IntershipsDEIS.Models.Project> Project { get; set; }
 
         public DbSet<IntershipsDEIS.Models.Intership> Intership { get; set; }

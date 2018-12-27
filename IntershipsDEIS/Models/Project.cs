@@ -33,7 +33,7 @@ namespace IntershipsDEIS.Models
         [DataType(DataType.MultilineText)]
         public string Objectives { get; set; }
 
-        public IList<Professor> Professors { get; set; }
+        public IList<ApplicationUser> Professors { get; set; }
         public IList<ProjectCandidature> Candidatures { get; set; }
 
         [DataType(DataType.MultilineText)]
@@ -42,7 +42,7 @@ namespace IntershipsDEIS.Models
         public Project()
         {
             State = State.ACCEPTED;
-            Professors = new List<Professor>();
+            Professors = new List<ApplicationUser>();
             Candidatures = new List<ProjectCandidature>();
         }
     }

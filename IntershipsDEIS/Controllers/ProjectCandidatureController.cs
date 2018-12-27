@@ -33,7 +33,7 @@ namespace IntershipsDEIS.Controllers
             }
             else if (User.IsInRole("Professor"))
             {
-                return View(await applicationDbContext.Where(p => p.Project.Professors.Any(o => o.ProfessorId.Equals(GetUserId()))).ToListAsync());
+                return View(await applicationDbContext.Where(p => p.Project.Professors.Any(o => o.Id.Equals(GetUserId()))).ToListAsync());
             }
             else if (User.IsInRole("Administrator"))
             {

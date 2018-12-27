@@ -37,7 +37,7 @@ namespace IntershipsDEIS.Models
         [DataType(DataType.MultilineText)]
         public string Objectives { get; set; }
 
-        public Professor Advisor { get; set; }
+        public ApplicationUser Advisor { get; set; }
 
         [Display(Name = "Advisor")]
         [ForeignKey("Professor")]
@@ -45,7 +45,7 @@ namespace IntershipsDEIS.Models
 
         public IList<IntershipCandidature> Candidatures { get; set; }
 
-        public Company Company { get; set; }
+        public ApplicationUser Company { get; set; }
 
         [ForeignKey("Company")]
         public string CompanyId { get; set; }

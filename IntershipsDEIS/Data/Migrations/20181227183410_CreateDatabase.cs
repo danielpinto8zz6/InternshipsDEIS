@@ -22,32 +22,6 @@ namespace IntershipsDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    Roles = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Project",
                 columns: table => new
                 {
@@ -85,6 +59,40 @@ namespace IntershipsDEIS.Data.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Role = table.Column<string>(nullable: true),
+                    ProjectId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Project_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Project",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -173,23 +181,37 @@ namespace IntershipsDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Company",
+                name: "Intership",
                 columns: table => new
                 {
-                    CompanyId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Address = table.Column<string>(nullable: false),
-                    Contact = table.Column<string>(nullable: false)
+                    IntershipId = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    State = table.Column<int>(nullable: false),
+                    AccessConditions = table.Column<string>(nullable: false),
+                    Location = table.Column<string>(nullable: false),
+                    Branch = table.Column<int>(nullable: false),
+                    Objectives = table.Column<string>(nullable: false),
+                    AdvisorId = table.Column<string>(nullable: true),
+                    CompanyId = table.Column<string>(nullable: true),
+                    Justification = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Company", x => x.CompanyId);
+                    table.PrimaryKey("PK_Intership", x => x.IntershipId);
                     table.ForeignKey(
-                        name: "FK_Company_AspNetUsers_CompanyId",
+                        name: "FK_Intership_AspNetUsers_AdvisorId",
+                        column: x => x.AdvisorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Intership_AspNetUsers_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -222,53 +244,6 @@ namespace IntershipsDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Student",
-                columns: table => new
-                {
-                    StudentId = table.Column<string>(nullable: false),
-                    Branch = table.Column<int>(nullable: false),
-                    UnfinishedGrades = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Contact = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Student", x => x.StudentId);
-                    table.ForeignKey(
-                        name: "FK_Student_AspNetUsers_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Professor",
-                columns: table => new
-                {
-                    ProfessorId = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Contact = table.Column<string>(nullable: false),
-                    ProjectId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Professor", x => x.ProfessorId);
-                    table.ForeignKey(
-                        name: "FK_Professor_AspNetUsers_ProfessorId",
-                        column: x => x.ProfessorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Professor_Project_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Project",
-                        principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ProjectCandidature",
                 columns: table => new
                 {
@@ -294,60 +269,6 @@ namespace IntershipsDEIS.Data.Migrations
                         column: x => x.ProjectId,
                         principalTable: "Project",
                         principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Grade",
-                columns: table => new
-                {
-                    GradeId = table.Column<string>(nullable: false),
-                    Subject = table.Column<string>(nullable: false),
-                    Pontuation = table.Column<int>(nullable: false),
-                    StudentId = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Grade", x => x.GradeId);
-                    table.ForeignKey(
-                        name: "FK_Grade_Student_StudentId",
-                        column: x => x.StudentId,
-                        principalTable: "Student",
-                        principalColumn: "StudentId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Intership",
-                columns: table => new
-                {
-                    IntershipId = table.Column<string>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    Date = table.Column<DateTime>(nullable: false),
-                    State = table.Column<int>(nullable: false),
-                    AccessConditions = table.Column<string>(nullable: false),
-                    Location = table.Column<string>(nullable: false),
-                    Branch = table.Column<int>(nullable: false),
-                    Objectives = table.Column<string>(nullable: false),
-                    AdvisorId = table.Column<string>(nullable: true),
-                    CompanyId = table.Column<string>(nullable: true),
-                    Justification = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Intership", x => x.IntershipId);
-                    table.ForeignKey(
-                        name: "FK_Intership_Professor_AdvisorId",
-                        column: x => x.AdvisorId,
-                        principalTable: "Professor",
-                        principalColumn: "ProfessorId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Intership_Company_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Company",
-                        principalColumn: "CompanyId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -418,9 +339,9 @@ namespace IntershipsDEIS.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Grade_StudentId",
-                table: "Grade",
-                column: "StudentId");
+                name: "IX_AspNetUsers_ProjectId",
+                table: "AspNetUsers",
+                column: "ProjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Intership_AdvisorId",
@@ -453,11 +374,6 @@ namespace IntershipsDEIS.Data.Migrations
                 column: "SenderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Professor_ProjectId",
-                table: "Professor",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProjectCandidature_CandidateId",
                 table: "ProjectCandidature",
                 column: "CandidateId");
@@ -486,9 +402,6 @@ namespace IntershipsDEIS.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Grade");
-
-            migrationBuilder.DropTable(
                 name: "IntershipCandidature");
 
             migrationBuilder.DropTable(
@@ -501,22 +414,13 @@ namespace IntershipsDEIS.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Student");
-
-            migrationBuilder.DropTable(
                 name: "Intership");
 
             migrationBuilder.DropTable(
-                name: "Professor");
-
-            migrationBuilder.DropTable(
-                name: "Company");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Project");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
         }
     }
 }

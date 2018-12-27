@@ -2,45 +2,46 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using IntershipsDEIS.Data;
 using IntershipsDEIS.Models;
-    
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 namespace IntershipsDEIS.Controllers
 {
-    public class UsersController : Controller
+    [Authorize]
+    public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        public UserController(ApplicationDbContext context)
         {
-            _userManager = userManager;
             _context = context;
-
-            // Assign roles to users
-            _context.Users.ToList().Select(async user =>
-            {
-                var userEntity = await _userManager.FindByIdAsync(user.Id);
-                user.Roles = string.Join("; ", await _userManager.GetRolesAsync(userEntity));
-            }).ToList();
         }
 
-        [Authorize(Roles = "Administrator")]
+        // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            if (User.IsInRole("Administrator"))
+            {
+                return View(await _context.Users.ToListAsync());
+            }
+
+            return RedirectToAction("Details", new { id = GetUserId() });
         }
 
-        // GET: Users/Details/5
+        // GET: User/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
+            {
+                id = GetUserId();
+            }
+
+            if (!User.IsInRole("Administrator") && id != GetUserId())
             {
                 return NotFound();
             }
@@ -55,7 +56,7 @@ namespace IntershipsDEIS.Controllers
             return View(applicationUser);
         }
 
-        [Authorize(Roles = "Administrator")]
+        // GET: User/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -71,13 +72,12 @@ namespace IntershipsDEIS.Controllers
             return View(applicationUser);
         }
 
-        // POST: Users/Edit/5
+        // POST: User/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, [Bind("Name,Role,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
             {
@@ -107,7 +107,7 @@ namespace IntershipsDEIS.Controllers
             return View(applicationUser);
         }
 
-        // GET: Users/Delete/5
+        // GET: User/Delete/5
         [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -116,7 +116,8 @@ namespace IntershipsDEIS.Controllers
                 return NotFound();
             }
 
-            var applicationUser = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var applicationUser = await _context.Users
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
                 return NotFound();
@@ -125,8 +126,7 @@ namespace IntershipsDEIS.Controllers
             return View(applicationUser);
         }
 
-        // POST: Users/Delete/5
-        [Authorize(Roles = "Administrator")]
+        // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -140,6 +140,11 @@ namespace IntershipsDEIS.Controllers
         private bool ApplicationUserExists(string id)
         {
             return _context.Users.Any(e => e.Id == id);
+        }
+
+        private string GetUserId()
+        {
+            return User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
     }
 }

@@ -70,10 +70,10 @@ namespace IntershipsDEIS.Controllers
             {
                 project.Date = DateTime.UtcNow.Date;
 
-                var professor = await _context.Professor.FindAsync(GetUserId());
+                var professor = await _context.Users.FindAsync(GetUserId());
                 if (professor == null)
                 {
-                    return RedirectToAction("Create", "Professor", new { id = GetUserId() });
+                    return NotFound();
                 }
 
                 project.Professors.Add(professor);
@@ -191,6 +191,23 @@ namespace IntershipsDEIS.Controllers
             }
 
             return RedirectToAction("Create", "ProjectCandidature", new { id = id });
+        }
+
+        [Authorize(Roles = "Professor")]
+        public async Task<IActionResult> Accept(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var project = await _context.Project.FindAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            return View();
         }
 
 
