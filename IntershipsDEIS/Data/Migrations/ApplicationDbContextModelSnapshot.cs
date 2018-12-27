@@ -175,6 +175,35 @@ namespace IntershipsDEIS.Data.Migrations
                     b.ToTable("IntershipCandidature");
                 });
 
+            modelBuilder.Entity("IntershipsDEIS.Models.Message", b =>
+                {
+                    b.Property<string>("MessageId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("RecipientId")
+                        .IsRequired();
+
+                    b.Property<string>("SenderId");
+
+                    b.Property<string>("Text")
+                        .IsRequired();
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.Property<bool>("read");
+
+                    b.HasKey("MessageId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Message");
+                });
+
             modelBuilder.Entity("IntershipsDEIS.Models.Professor", b =>
                 {
                     b.Property<string>("ProfessorId");
@@ -414,6 +443,18 @@ namespace IntershipsDEIS.Data.Migrations
                     b.HasOne("IntershipsDEIS.Models.Intership", "Intership")
                         .WithMany("Candidatures")
                         .HasForeignKey("IntershipId");
+                });
+
+            modelBuilder.Entity("IntershipsDEIS.Models.Message", b =>
+                {
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("IntershipsDEIS.Models.Professor", b =>

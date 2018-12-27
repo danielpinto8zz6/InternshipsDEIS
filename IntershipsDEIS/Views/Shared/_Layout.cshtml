@@ -16,6 +16,7 @@
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE="/>
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 </head>
 <body>
     <header>
@@ -28,17 +29,12 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                    <partial name="_AdminActionsPartial" />  
-                    <partial name="_StudentActionsPartial" />                  
-                    <partial name="_ProfessorActionsPartial" />                  
-                    <partial name="_CompanyActionsPartial" />                  
+                    <partial name="_LoggedActionsPartial" />                
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        <partial name="_AdminActionsPartial" />  
+                        <partial name="_StudentActionsPartial" />                  
+                        <partial name="_ProfessorActionsPartial" />                  
+                        <partial name="_CompanyActionsPartial" />  
                     </ul>
                 </div>
             </div>

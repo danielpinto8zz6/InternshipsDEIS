@@ -55,7 +55,7 @@ namespace IntershipsDEIS.Models
 
         public Intership()
         {
-            State = State.STANDBY;
+            State = State.ACCEPTED;
             Candidatures = new List<IntershipCandidature>();
         }
     }

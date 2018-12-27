@@ -41,7 +41,7 @@ namespace IntershipsDEIS.Models
 
         public Project()
         {
-            State = State.STANDBY;
+            State = State.ACCEPTED;
             Professors = new List<Professor>();
             Candidatures = new List<ProjectCandidature>();
         }

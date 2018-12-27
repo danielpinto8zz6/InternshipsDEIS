@@ -193,6 +193,35 @@ namespace IntershipsDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Message",
+                columns: table => new
+                {
+                    MessageId = table.Column<string>(nullable: false),
+                    SenderId = table.Column<string>(nullable: true),
+                    RecipientId = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Text = table.Column<string>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    read = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Message", x => x.MessageId);
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Message_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Student",
                 columns: table => new
                 {
@@ -414,6 +443,16 @@ namespace IntershipsDEIS.Data.Migrations
                 column: "IntershipId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Message_RecipientId",
+                table: "Message",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_SenderId",
+                table: "Message",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Professor_ProjectId",
                 table: "Professor",
                 column: "ProjectId");
@@ -451,6 +490,9 @@ namespace IntershipsDEIS.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "IntershipCandidature");
+
+            migrationBuilder.DropTable(
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "ProjectCandidature");
