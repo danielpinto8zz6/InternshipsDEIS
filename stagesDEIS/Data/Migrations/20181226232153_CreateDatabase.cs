@@ -58,7 +58,8 @@ namespace stagesDEIS.Data.Migrations
                     State = table.Column<int>(nullable: false),
                     AccessConditions = table.Column<string>(nullable: false),
                     Branch = table.Column<int>(nullable: false),
-                    Objectives = table.Column<string>(nullable: false)
+                    Objectives = table.Column<string>(nullable: false),
+                    Justification = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -301,7 +302,8 @@ namespace stagesDEIS.Data.Migrations
                     Branch = table.Column<int>(nullable: false),
                     Objectives = table.Column<string>(nullable: false),
                     AdvisorId = table.Column<string>(nullable: true),
-                    CompanyId = table.Column<string>(nullable: true)
+                    CompanyId = table.Column<string>(nullable: true),
+                    Justification = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

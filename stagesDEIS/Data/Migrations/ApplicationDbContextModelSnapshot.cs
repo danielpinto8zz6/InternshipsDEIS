@@ -247,6 +247,8 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<string>("Justification");
+
                     b.Property<string>("Objectives")
                         .IsRequired();
 
@@ -306,6 +308,8 @@ namespace stagesDEIS.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
+
+                    b.Property<string>("Justification");
 
                     b.Property<string>("Location")
                         .IsRequired();

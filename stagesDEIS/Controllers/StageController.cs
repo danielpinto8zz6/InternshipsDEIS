@@ -60,7 +60,7 @@ namespace stagesDEIS.Controllers
         [Authorize(Roles = "Professor,Company")]
         public IActionResult Create()
         {
-            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "ProfessorId");
+            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "Name");
             ViewData["CompanyId"] = new SelectList(_context.Company, "CompanyId", "CompanyId");
             return View();
         }
@@ -85,7 +85,9 @@ namespace stagesDEIS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "ProfessorId", stage.AdvisorId);
+
+            ViewData["AdvisorId"] = new SelectList(_context.Professor, "ProfessorId", "Name", stage.AdvisorId);
+
             return View(stage);
         }
 

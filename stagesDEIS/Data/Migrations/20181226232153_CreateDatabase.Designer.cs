@@ -9,7 +9,7 @@ using stagesDEIS.Data;
 namespace stagesDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181226222935_CreateDatabase")]
+    [Migration("20181226232153_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -249,6 +249,8 @@ namespace stagesDEIS.Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<string>("Justification");
+
                     b.Property<string>("Objectives")
                         .IsRequired();
 
@@ -308,6 +310,8 @@ namespace stagesDEIS.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired();
+
+                    b.Property<string>("Justification");
 
                     b.Property<string>("Location")
                         .IsRequired();

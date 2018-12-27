@@ -39,6 +39,7 @@ namespace stagesDEIS.Models
 
         public Professor Advisor { get; set; }
 
+        [Display(Name = "Advisor")]
         [ForeignKey("Professor")]
         public string AdvisorId { get; set; }
 
