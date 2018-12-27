@@ -1,1 +1,0 @@
-dotnet aspnet-codegenerator controller -name ProposalController -m stagesDEIS.Models.Proposal -dc ApplicationDbContext --relativeFolderPath Controllers --useDefaultLayout

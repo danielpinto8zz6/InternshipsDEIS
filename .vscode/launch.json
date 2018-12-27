@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/stagesDEIS/bin/Debug/netcoreapp2.2/stagesDEIS.dll",
+            "program": "${workspaceFolder}/IntershipsDEIS/bin/Debug/netcoreapp2.2/IntershipsDEIS.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/stagesDEIS",
+            "cwd": "${workspaceFolder}/IntershipsDEIS",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {

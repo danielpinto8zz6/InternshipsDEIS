@@ -1,0 +1,54 @@
+@model IntershipsDEIS.Models.IntershipCandidature
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>IntershipCandidature</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Candidate)
+        </dt>
+        <dd class = "col-sm-10">
+            <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.Candidate.Id">@Html.DisplayFor(model => model.Candidate.UserName)</a>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Intership)
+        </dt>
+        <dd class = "col-sm-10">
+            <a asp-action="Details" asp-controller="Intership" asp-route-id="@Model.IntershipId">@Html.DisplayFor(model => model.Intership.Title)</a>
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Branch)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Branch)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Grades)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Grades)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UnfinishedGrades)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UnfinishedGrades)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Result)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Result)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.IntershipCandidatureId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
