@@ -26,7 +26,7 @@ namespace IntershipsDEIS
         private static async Task CreateRolesAsync(
     RoleManager<IdentityRole> roleManager)
         {
-            string[] RoleNames = { "Administrator", "Company", "Student", "Professor" };
+            string[] RoleNames = { "Administrator", "Company", "Student", "Professor", "Committee" };
 
             foreach (var Role in RoleNames)
             {

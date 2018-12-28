@@ -22,14 +22,26 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: Intership
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
             var applicationDbContext = _context.Intership.Include(s => s.Advisor).Include(s => s.Company);
 
             // TODO: check if professor have rights to accept/reject
-            if (User.IsInRole("Professor"))
+            if (User.IsInRole("Committee"))
             {
+                if (!String.IsNullOrEmpty(search))
+                {
+                    var filter = applicationDbContext.Where(s => s.Title.Contains(search));
+                    return View(await filter.ToListAsync());
+                }
+
                 return View(await applicationDbContext.ToListAsync());
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                var filter = applicationDbContext.Where(s => s.Title.Contains(search) && s.State.Equals(State.ACCEPTED));
+                return View(await filter.ToListAsync());
             }
 
             // Show only accepted projects to geral/students...
@@ -60,8 +72,8 @@ namespace IntershipsDEIS.Controllers
         [Authorize(Roles = "Company")]
         public IActionResult Create()
         {
-            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName");
-            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Company")).ToList(), "Id", "UserName");
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Professor") || c.Role.Equals("Committee")).ToList(), "Id", "UserName");
+            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Company")).ToList(), "Id", "UserName");
             return View();
         }
 
@@ -80,7 +92,7 @@ namespace IntershipsDEIS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName", Intership.AdvisorId);
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Professor") || c.Role.Equals("Committee")).ToList(), "Id", "UserName", Intership.AdvisorId);
 
             return View(Intership);
         }
@@ -99,8 +111,8 @@ namespace IntershipsDEIS.Controllers
             {
                 return NotFound();
             }
-            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName", Intership.AdvisorId);
-            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Company")).ToList(), "Id", "UserName", Intership.CompanyId);
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Professor") || c.Role.Equals("Committee")).ToList(), "Id", "UserName", Intership.AdvisorId);
+            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Company")).ToList(), "Id", "UserName", Intership.CompanyId);
             return View(Intership);
         }
 
@@ -137,8 +149,8 @@ namespace IntershipsDEIS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Professor")).ToList(), "Id", "UserName", Intership.AdvisorId);
-            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Contains("Company")).ToList(), "Id", "UserName", Intership.CompanyId);
+            ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Professor") || c.Role.Equals("Committee")).ToList(), "Id", "UserName", Intership.AdvisorId);
+            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Company")).ToList(), "Id", "UserName", Intership.CompanyId);
             return View(Intership);
         }
 
@@ -201,6 +213,52 @@ namespace IntershipsDEIS.Controllers
             }
 
             return RedirectToAction("Create", "IntershipCandidature", new { id = id });
+        }
+
+        [Authorize(Roles = "Committee")]
+        public async Task<IActionResult> Accept(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var intership = await _context.Intership.FindAsync(id);
+            if (intership == null)
+            {
+                return NotFound();
+            }
+
+            // Accept
+            intership.State = State.ACCEPTED;
+
+            _context.Update(intership);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Committee")]
+        public async Task<IActionResult> Reject(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var intership = await _context.Intership.FindAsync(id);
+            if (intership == null)
+            {
+                return NotFound();
+            }
+
+            // Accept
+            intership.State = State.REJECTED;
+
+            _context.Update(intership);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         private bool IntershipExists(string id)

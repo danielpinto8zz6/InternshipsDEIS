@@ -22,12 +22,25 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: Project
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
             // TODO: check if professor have rights to accept/reject
-            if (User.IsInRole("Professor"))
+            if (User.IsInRole("Committee"))
             {
+
+                if (!String.IsNullOrEmpty(search))
+                {
+                    var filter = _context.Project.Where(s => s.Title.Contains(search));
+                    return View(await filter.ToListAsync());
+                }
+
                 return View(await _context.Project.ToListAsync());
+            }
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                var filter = _context.Project.Where(p => p.State.Equals(State.ACCEPTED) && p.Title.Contains(search));
+                return View(await filter.ToListAsync());
             }
 
             // Show only accepted projects to geral/students...
@@ -193,7 +206,7 @@ namespace IntershipsDEIS.Controllers
             return RedirectToAction("Create", "ProjectCandidature", new { id = id });
         }
 
-        [Authorize(Roles = "Professor")]
+        [Authorize(Roles = "Committee")]
         public async Task<IActionResult> Accept(string id)
         {
             if (id == null)
@@ -207,9 +220,37 @@ namespace IntershipsDEIS.Controllers
                 return NotFound();
             }
 
-            return View();
+            // Accept
+            project.State = State.ACCEPTED;
+
+            _context.Update(project);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Committee")]
+        public async Task<IActionResult> Reject(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var project = await _context.Project.FindAsync(id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            // Accept
+            project.State = State.REJECTED;
+
+            _context.Update(project);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
 
         private bool ProjectExists(string id)
         {

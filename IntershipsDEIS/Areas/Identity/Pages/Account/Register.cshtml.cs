@@ -26,7 +26,7 @@ namespace IntershipsDEIS.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _db;
 
-        public SelectList Roles { get; }
+        public SelectList AvailableRoles { get; }
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -41,7 +41,7 @@ namespace IntershipsDEIS.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _db = context;
 
-            Roles = new SelectList(_db.Roles.Where(u => !u.Name.Contains("Admin"))
+            AvailableRoles = new SelectList(_db.Roles.Where(u => !u.Name.Contains("Admin") && !u.Name.Contains("Committee"))
                                            .ToList(), "Name", "Name");
         }
 

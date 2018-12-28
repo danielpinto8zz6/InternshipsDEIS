@@ -71,6 +71,9 @@
                     @Html.DisplayFor(modelItem => item.AccessFailedCount)
                 </td>
                 <td>
+                    @if (item.Role != null && item.Role.Equals("Professor")) {
+                        <a asp-action="AddToCommittee" asp-route-id="@item.Id">Add to committee</a>
+                    }
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

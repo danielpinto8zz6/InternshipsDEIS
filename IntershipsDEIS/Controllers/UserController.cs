@@ -9,17 +9,20 @@ using IntershipsDEIS.Data;
 using IntershipsDEIS.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace IntershipsDEIS.Controllers
 {
     [Authorize]
     public class UserController : Controller
     {
+        private UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: User
@@ -134,6 +137,28 @@ namespace IntershipsDEIS.Controllers
             var applicationUser = await _context.Users.FindAsync(id);
             _context.Users.Remove(applicationUser);
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> AddToCommittee(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var applicationUser = await _context.Users.FindAsync(id);
+            if (applicationUser == null)
+            {
+                return NotFound();
+            }
+
+            await _userManager.AddToRoleAsync(applicationUser, "Committee");
+            applicationUser.Role = "Committee";
+
+            _context.Update(applicationUser);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

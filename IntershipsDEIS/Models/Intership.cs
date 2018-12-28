@@ -22,6 +22,7 @@ namespace IntershipsDEIS.Models
 
         public State State { get; set; }
 
+        [Display(Name = "Access Conditions")]
         [Required(ErrorMessage = "You must provide access conditions")]
         [DataType(DataType.MultilineText)]
         public string AccessConditions { get; set; }
@@ -55,7 +56,7 @@ namespace IntershipsDEIS.Models
 
         public Intership()
         {
-            State = State.ACCEPTED;
+            State = State.STANDBY;
             Candidatures = new List<IntershipCandidature>();
         }
     }
