@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntershipsDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181228023553_CreateDatabase")]
+    [Migration("20181228173127_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,52 @@ namespace IntershipsDEIS.Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("IntershipsDEIS.Models.EvaluateCompany", b =>
+                {
+                    b.Property<string>("EvaluateCompanyId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CompanyId");
+
+                    b.Property<string>("Justification")
+                        .IsRequired();
+
+                    b.Property<int>("Pontuation");
+
+                    b.Property<string>("StudentId");
+
+                    b.HasKey("EvaluateCompanyId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("EvaluateCompany");
+                });
+
+            modelBuilder.Entity("IntershipsDEIS.Models.EvaluateStudent", b =>
+                {
+                    b.Property<string>("EvaluateStudentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("EntityId");
+
+                    b.Property<string>("Justification")
+                        .IsRequired();
+
+                    b.Property<int>("Pontuation");
+
+                    b.Property<string>("StudentId");
+
+                    b.HasKey("EvaluateStudentId");
+
+                    b.HasIndex("EntityId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("EvaluateStudent");
                 });
 
             modelBuilder.Entity("IntershipsDEIS.Models.Intership", b =>
@@ -344,6 +390,28 @@ namespace IntershipsDEIS.Data.Migrations
                     b.HasOne("IntershipsDEIS.Models.Project")
                         .WithMany("Professors")
                         .HasForeignKey("ProjectId");
+                });
+
+            modelBuilder.Entity("IntershipsDEIS.Models.EvaluateCompany", b =>
+                {
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId");
+
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
+                });
+
+            modelBuilder.Entity("IntershipsDEIS.Models.EvaluateStudent", b =>
+                {
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Entity")
+                        .WithMany()
+                        .HasForeignKey("EntityId");
+
+                    b.HasOne("IntershipsDEIS.Models.ApplicationUser", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
                 });
 
             modelBuilder.Entity("IntershipsDEIS.Models.Intership", b =>

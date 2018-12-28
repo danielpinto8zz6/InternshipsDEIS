@@ -181,6 +181,60 @@ namespace IntershipsDEIS.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EvaluateCompany",
+                columns: table => new
+                {
+                    EvaluateCompanyId = table.Column<string>(nullable: false),
+                    StudentId = table.Column<string>(nullable: true),
+                    CompanyId = table.Column<string>(nullable: true),
+                    Pontuation = table.Column<int>(nullable: false),
+                    Justification = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EvaluateCompany", x => x.EvaluateCompanyId);
+                    table.ForeignKey(
+                        name: "FK_EvaluateCompany_AspNetUsers_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EvaluateCompany_AspNetUsers_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EvaluateStudent",
+                columns: table => new
+                {
+                    EvaluateStudentId = table.Column<string>(nullable: false),
+                    EntityId = table.Column<string>(nullable: true),
+                    StudentId = table.Column<string>(nullable: true),
+                    Pontuation = table.Column<int>(nullable: false),
+                    Justification = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EvaluateStudent", x => x.EvaluateStudentId);
+                    table.ForeignKey(
+                        name: "FK_EvaluateStudent_AspNetUsers_EntityId",
+                        column: x => x.EntityId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EvaluateStudent_AspNetUsers_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Intership",
                 columns: table => new
                 {
@@ -344,6 +398,26 @@ namespace IntershipsDEIS.Data.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EvaluateCompany_CompanyId",
+                table: "EvaluateCompany",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EvaluateCompany_StudentId",
+                table: "EvaluateCompany",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EvaluateStudent_EntityId",
+                table: "EvaluateStudent",
+                column: "EntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EvaluateStudent_StudentId",
+                table: "EvaluateStudent",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Intership_AdvisorId",
                 table: "Intership",
                 column: "AdvisorId");
@@ -400,6 +474,12 @@ namespace IntershipsDEIS.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "EvaluateCompany");
+
+            migrationBuilder.DropTable(
+                name: "EvaluateStudent");
 
             migrationBuilder.DropTable(
                 name: "IntershipCandidature");

@@ -31,13 +31,13 @@ namespace IntershipsDEIS.Controllers
             {
                 return View(await applicationDbContext.Where(p => p.Candidate.Id.Equals(GetUserId())).ToListAsync());
             }
+            else if (User.IsInRole("Administrator") || User.IsInRole("Committee"))
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
             else if (User.IsInRole("Professor"))
             {
                 return View(await applicationDbContext.Where(p => p.Project.Professors.Any(o => o.Id.Equals(GetUserId()))).ToListAsync());
-            }
-            else if (User.IsInRole("Administrator"))
-            {
-                return View(await applicationDbContext.ToListAsync());
             }
             else
             {
@@ -187,7 +187,7 @@ namespace IntershipsDEIS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Professor,Company")]
+        [Authorize(Roles = "Professor")]
         public async Task<IActionResult> Accept(string id)
         {
             if (id == null)
@@ -204,6 +204,18 @@ namespace IntershipsDEIS.Controllers
                 return NotFound();
             }
 
+            var professor = await _context.Users.FindAsync(GetUserId());
+            if (professor == null)
+            {
+                return NotFound();
+            }
+
+            // Only professors of project can accept
+            if (!projectCandidature.Project.Professors.Contains(professor))
+            {
+                return NotFound();
+            }
+
             projectCandidature.Result = State.ACCEPTED;
 
             _context.Update(projectCandidature);
@@ -212,7 +224,7 @@ namespace IntershipsDEIS.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Professor,Company")]
+        [Authorize(Roles = "Professor,Committee")]
         public async Task<IActionResult> Reject(string id)
         {
             if (id == null)
@@ -227,6 +239,21 @@ namespace IntershipsDEIS.Controllers
             if (projectCandidature == null)
             {
                 return NotFound();
+            }
+
+            if (!User.IsInRole("Committee"))
+            {
+                var professor = await _context.Users.FindAsync(GetUserId());
+                if (professor == null)
+                {
+                    return NotFound();
+                }
+
+                // Only professors of project or committee can reject
+                if (!projectCandidature.Project.Professors.Contains(professor))
+                {
+                    return NotFound();
+                }
             }
 
             projectCandidature.Result = State.REJECTED;

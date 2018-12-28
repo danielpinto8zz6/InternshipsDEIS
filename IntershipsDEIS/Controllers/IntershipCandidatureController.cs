@@ -34,13 +34,13 @@ namespace IntershipsDEIS.Controllers
             {
                 return View(await applicationDbContext.Where(s => s.Intership.CompanyId.Equals(GetUserId())).ToListAsync());
             }
+            else if (User.IsInRole("Administrator") || User.IsInRole("Committee"))
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
             else if (User.IsInRole("Professor"))
             {
                 return View(await applicationDbContext.Where(s => s.Intership.Advisor.Equals(GetUserId())).ToListAsync());
-            }
-            else if (User.IsInRole("Administrator"))
-            {
-                return View(await applicationDbContext.ToListAsync());
             }
             else
             {
@@ -188,6 +188,71 @@ namespace IntershipsDEIS.Controllers
             var IntershipCandidature = await _context.IntershipCandidature.FindAsync(id);
             _context.IntershipCandidature.Remove(IntershipCandidature);
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Company")]
+        public async Task<IActionResult> Accept(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var intershipCandidature = await _context.IntershipCandidature
+                .Include(s => s.Candidate)
+                .Include(s => s.Intership)
+                .FirstOrDefaultAsync(m => m.IntershipCandidatureId == id);
+            if (intershipCandidature == null)
+            {
+                return NotFound();
+            }
+
+            // Only company can accept
+            if (!intershipCandidature.Intership.CompanyId.Equals(GetUserId()))
+            {
+                return NotFound();
+            }
+
+            intershipCandidature.Result = State.ACCEPTED;
+
+            _context.Update(intershipCandidature);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Professor,Committee")]
+        public async Task<IActionResult> Reject(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var intershipCandidature = await _context.IntershipCandidature
+                .Include(s => s.Candidate)
+                .Include(s => s.Intership)
+                .FirstOrDefaultAsync(m => m.IntershipCandidatureId == id);
+            if (intershipCandidature == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.IsInRole("Committee"))
+            {
+                // Only company or committee can reject
+                if (!intershipCandidature.Intership.CompanyId.Equals(GetUserId()))
+                {
+                    return NotFound();
+                }
+            }
+
+            intershipCandidature.Result = State.REJECTED;
+
+            _context.Update(intershipCandidature);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

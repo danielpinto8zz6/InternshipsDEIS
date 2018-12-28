@@ -29,5 +29,9 @@ namespace IntershipsDEIS.Data
         public DbSet<IntershipsDEIS.Models.ProjectCandidature> ProjectCandidature { get; set; }
 
         public DbSet<IntershipsDEIS.Models.Message> Message { get; set; }
+
+        public DbSet<IntershipsDEIS.Models.EvaluateCompany> EvaluateCompany { get; set; }
+
+        public DbSet<IntershipsDEIS.Models.EvaluateStudent> EvaluateStudent { get; set; }
     }
 }
