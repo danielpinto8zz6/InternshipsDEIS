@@ -25,7 +25,7 @@ namespace IntershipsDEIS.Controllers
         public async Task<IActionResult> Index(string search)
         {
             // TODO: check if professor have rights to accept/reject
-            if (User.IsInRole("Committee"))
+            if (User.IsInRole("Committee") || User.IsInRole("Administrator"))
             {
 
                 if (!String.IsNullOrEmpty(search))
@@ -37,18 +37,16 @@ namespace IntershipsDEIS.Controllers
                 return View(await _context.Project.ToListAsync());
             }
 
-            // if (User.IsInRole("Professor"))
-            // {
+            if (User.IsInRole("Professor"))
+            {
 
-            //     if (!String.IsNullOrEmpty(search))
-            //     {
-            //         var filter = _context.Project.Where(s => s.Title.Contains(search));
-            //         return View(await filter.ToListAsync());
-            //     }
-
-            //     var professor = _context.Users.FindAsync(GetUserId());
-            //     return View(await _context.Project.Where(p => p.Professors.ToList().Contains(professor)).ToListAsync());
-            // }
+                if (!String.IsNullOrEmpty(search))
+                {
+                    var filter = _context.Project.Where(s => s.Title.Contains(search));
+                    return View(await filter.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
+                }
+                return View(await _context.Project.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
+            }
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -111,7 +109,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: Project/Edit/5
-        [Authorize(Roles = "Professor")]
+        [Authorize(Roles = "Administrator,Professor")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -130,7 +128,7 @@ namespace IntershipsDEIS.Controllers
         // POST: Project/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Professor")]
+        [Authorize(Roles = "Administrator,Professor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("ProjectId,Title,Description,Date,State,AccessConditions,Branch,Objectives")] Project project)
@@ -164,7 +162,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: Project/Delete/5
-        [Authorize(Roles = "Professor")]
+        [Authorize(Roles = "Administrator,Professor")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -183,7 +181,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // POST: Project/Delete/5
-        [Authorize(Roles = "Professor")]
+        [Authorize(Roles = "Administrator,Professor")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

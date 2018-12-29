@@ -95,7 +95,7 @@ namespace IntershipsDEIS.Controllers
         // GET: Message/Create
         public IActionResult Create()
         {
-            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "UserName");
+            ViewData["RecipientId"] = new SelectList(_context.Users.Where(u => u.Id != GetUserId()), "Id", "UserName");
             return View();
         }
 
@@ -114,7 +114,7 @@ namespace IntershipsDEIS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RecipientId"] = new SelectList(_context.Users, "Id", "Id", message.RecipientId);
+            ViewData["RecipientId"] = new SelectList(_context.Users.Where(u => u.Id != GetUserId()), "Id", "Id", message.RecipientId);
             return View(message);
         }
 

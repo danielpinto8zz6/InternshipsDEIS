@@ -1,12 +1,13 @@
 @model IEnumerable<IntershipsDEIS.Models.ProjectCandidature>
 
-    @{
-        ViewData["Title"] = "Index";
-    }
+@{
+    ViewData["Title"] = "Index";
+}
 
-    <h1>Index</h1>
+<h1>Index</h1>
 
-    <table class="table">
+<div class="table-responsive">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>
@@ -30,7 +31,7 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="myTable">
             @foreach (var item in Model) {
             <tr>
                 <td>
@@ -60,7 +61,7 @@
                     <a class="btn btn-danger btn-sm" asp-action="Reject" asp-route-id="@item.ProjectCandidatureId">Reject</a>
                 }
                     <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.ProjectCandidatureId">Details</a>
-                @if (this.User.IsInRole("Student") && item.Result == State.STANDBY)
+                @if (this.User.IsInRole("Student") && item.Result == State.STANDBY || this.User.IsInRole("Administrator"))
                 {
                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ProjectCandidatureId">Edit</a>
                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ProjectCandidatureId">Delete</a>
@@ -70,3 +71,4 @@
             }
         </tbody>
     </table>
+</div>

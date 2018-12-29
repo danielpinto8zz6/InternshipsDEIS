@@ -31,7 +31,7 @@ namespace IntershipsDEIS.Controllers
             {
                 return View(await applicationDbContext.ToListAsync());
             }
-            
+
             return View(await applicationDbContext.Where(e => e.EntityId.Equals(GetUserId())).ToListAsync());
         }
 
@@ -59,7 +59,7 @@ namespace IntershipsDEIS.Controllers
         [Authorize(Roles = "Company,Professor")]
         public IActionResult Create()
         {
-            ViewData["StudentId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["StudentId"] = new SelectList(_context.Users.Where(u => u.Role.Contains("Student")), "Id", "UserName");
             return View();
         }
 
@@ -78,7 +78,7 @@ namespace IntershipsDEIS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudentId"] = new SelectList(_context.Users, "Id", "Id", evaluateStudent.StudentId);
+            ViewData["StudentId"] = new SelectList(_context.Users.Where(u => u.Role.Contains("Student")), "Id", "UserName", evaluateStudent.StudentId);
             return View(evaluateStudent);
         }
 

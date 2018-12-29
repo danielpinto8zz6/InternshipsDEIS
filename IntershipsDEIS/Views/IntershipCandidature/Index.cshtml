@@ -62,7 +62,7 @@
                     <a class="btn btn-danger btn-sm" asp-action="Reject" asp-route-id="@item.IntershipCandidatureId">Reject</a>
                 }
                     <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.IntershipCandidatureId">Details</a>
-                @if (this.User.IsInRole("Student") && item.Result == State.STANDBY)
+                @if (this.User.IsInRole("Student") && item.Result == State.STANDBY || this.User.IsInRole("Administrator"))
                 {
                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IntershipCandidatureId">Edit</a>
                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IntershipCandidatureId">Delete</a>

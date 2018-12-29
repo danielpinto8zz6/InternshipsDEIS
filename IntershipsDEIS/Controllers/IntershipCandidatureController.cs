@@ -106,7 +106,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: IntershipCandidature/Edit/5
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Administrator,Student")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -125,7 +125,7 @@ namespace IntershipsDEIS.Controllers
         // POST: IntershipCandidature/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Administrator,Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("IntershipCandidatureId,StudentId,IntershipId,Branch,Grades,UnfinishedGrades,Result")] IntershipCandidature IntershipCandidature)
@@ -159,7 +159,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: IntershipCandidature/Delete/5
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Administrator,Student")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -180,7 +180,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // POST: IntershipCandidature/Delete/5
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Administrator,Student")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)

@@ -21,93 +21,95 @@
     </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.State)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccessConditions)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Branch)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Objectives)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Advisor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccessConditions)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Branch)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Objectives)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Advisor.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company.Name)
-            </td>
-            <td>
-            @if (this.User.IsInRole("Committee") && item.State == State.STANDBY)
-            {
-               <a class="btn btn-success btn-sm" asp-action="Accept" asp-route-id="@item.IntershipId">Accept</a>
-               <a class="btn btn-warning btn-sm" asp-action="Reject" asp-route-id="@item.IntershipId">Reject</a>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Date)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.State)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AccessConditions)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Branch)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Objectives)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Advisor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.State)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccessConditions)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Branch)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Objectives)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Advisor.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company.Name)
+                </td>
+                <td>
+                    @if (this.User.IsInRole("Committee") && item.State == State.STANDBY)
+                    {
+                    <a class="btn btn-success btn-sm" asp-action="Accept" asp-route-id="@item.IntershipId">Accept</a>
+                    <a class="btn btn-warning btn-sm" asp-action="Reject" asp-route-id="@item.IntershipId">Reject</a>
+                    }
+                    @if (this.User.IsInRole("Student"))
+                    {
+                    <a class="btn btn-success btn-sm" asp-action="Apply" asp-route-id="@item.IntershipId">Apply</a>
+                    }
+                    <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.IntershipId">Details</a>
+                    @if (this.User.IsInRole("Company") || this.User.IsInRole("Administrator"))
+                    {
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IntershipId">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IntershipId">Delete</a>
+                    }
+                </td>
+            </tr>
             }
-            @if (this.User.IsInRole("Student"))
-            {
-               <a class="btn btn-success btn-sm" asp-action="Apply" asp-route-id="@item.IntershipId">Apply</a>
-            }
-            <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.IntershipId">Details</a>
-            @if (this.User.IsInRole("Company"))
-            {
-               <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IntershipId">Edit</a>
-               <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IntershipId">Delete</a>
-            }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>

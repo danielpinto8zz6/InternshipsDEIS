@@ -27,12 +27,12 @@ namespace IntershipsDEIS.Controllers
         {
             var applicationDbContext = _context.EvaluateCompany.Include(e => e.Company).Include(e => e.Student);
 
-            if (User.IsInRole("Student"))
+            if (User.IsInRole("Committee"))
             {
-                return View(await applicationDbContext.Where(e => e.StudentId.Equals(GetUserId())).ToListAsync());
+                return View(await applicationDbContext.ToListAsync());
             }
 
-            return View(await applicationDbContext.ToListAsync());
+            return View(await applicationDbContext.Where(e => e.StudentId.Equals(GetUserId())).ToListAsync());
         }
 
         // GET: EvaluateCompany/Details/5

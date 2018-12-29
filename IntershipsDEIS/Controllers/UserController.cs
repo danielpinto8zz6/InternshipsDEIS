@@ -36,6 +36,30 @@ namespace IntershipsDEIS.Controllers
             return RedirectToAction("Details", new { id = GetUserId() });
         }
 
+        [Authorize(Roles = "Committee,Administrator")]
+        public async Task<IActionResult> Students()
+        {
+            return View(await _context.Users.Where(u => u.Role.Equals("Student")).ToListAsync());
+        }
+
+        [Authorize(Roles = "Committee,Administrator")]
+        public async Task<IActionResult> Professors()
+        {
+            return View(await _context.Users.Where(u => u.Role.Equals("Professor") || u.Role.Equals("Committee")).ToListAsync());
+        }
+
+        [Authorize(Roles = "Committee,Administrator")]
+        public async Task<IActionResult> Companies()
+        {
+            return View(await _context.Users.Where(u => u.Role.Equals("Company")).ToListAsync());
+        }
+
+        [Authorize(Roles = "Committee,Administrator")]
+        public async Task<IActionResult> Committee()
+        {
+            return View(await _context.Users.Where(u => u.Role.Equals("Committee")).ToListAsync());
+        }
+
         // GET: User/Details/5
         public async Task<IActionResult> Details(string id)
         {
@@ -44,7 +68,7 @@ namespace IntershipsDEIS.Controllers
                 id = GetUserId();
             }
 
-            if (!User.IsInRole("Administrator") && id != GetUserId())
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Committee") && id != GetUserId())
             {
                 return NotFound();
             }

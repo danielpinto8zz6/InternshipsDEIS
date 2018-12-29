@@ -27,12 +27,11 @@ namespace IntershipsDEIS.Controllers
             var applicationDbContext = _context.Intership.Include(s => s.Advisor).Include(s => s.Company);
 
             // TODO: check if professor have rights to accept/reject
-            if (User.IsInRole("Committee"))
+            if (User.IsInRole("Committee") || User.IsInRole("Administrator"))
             {
                 if (!String.IsNullOrEmpty(search))
                 {
-                    var filter = applicationDbContext.Where(s => s.Title.Contains(search));
-                    return View(await filter.ToListAsync());
+                    return View(await applicationDbContext.Where(s => s.Title.Contains(search)).ToListAsync());
                 }
 
                 return View(await applicationDbContext.ToListAsync());
@@ -40,8 +39,7 @@ namespace IntershipsDEIS.Controllers
 
             if (!String.IsNullOrEmpty(search))
             {
-                var filter = applicationDbContext.Where(s => s.Title.Contains(search) && s.State.Equals(State.ACCEPTED));
-                return View(await filter.ToListAsync());
+                return View(await applicationDbContext.Where(s => s.Title.Contains(search) && s.State.Equals(State.ACCEPTED)).ToListAsync());
             }
 
             // Show only accepted projects to geral/students...
@@ -98,7 +96,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: Intership/Edit/5
-        [Authorize(Roles = "Company")]
+        [Authorize(Roles = "Administrator,Company")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -119,7 +117,7 @@ namespace IntershipsDEIS.Controllers
         // POST: Intership/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = "Company")]
+        [Authorize(Roles = "Administrator,Company")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("IntershipId,Title,Description,Date,State,AccessConditions,Location,Branch,Objectives,AdvisorId,CompanyId")] Intership Intership)
@@ -155,7 +153,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // GET: Intership/Delete/5
-        [Authorize(Roles = "Company")]
+        [Authorize(Roles = "Administrator,Company")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -176,7 +174,7 @@ namespace IntershipsDEIS.Controllers
         }
 
         // POST: Intership/Delete/5
-        [Authorize(Roles = "Company")]
+        [Authorize(Roles = "Administrator,Company")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
