@@ -73,7 +73,6 @@ namespace IntershipsDEIS.Controllers
         public IActionResult Create()
         {
             ViewData["AdvisorId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Professor") || c.Role.Equals("Committee")).ToList(), "Id", "UserName");
-            ViewData["CompanyId"] = new SelectList(_context.Users.Where(c => c.Role.Equals("Company")).ToList(), "Id", "UserName");
             return View();
         }
 
@@ -87,6 +86,7 @@ namespace IntershipsDEIS.Controllers
         {
             if (ModelState.IsValid)
             {
+                Intership.CompanyId = GetUserId();
                 _context.Add(Intership);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

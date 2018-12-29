@@ -41,7 +41,7 @@ namespace IntershipsDEIS.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _db = context;
 
-            AvailableRoles = new SelectList(_db.Roles.Where(u => !u.Name.Contains("Admin") && !u.Name.Contains("Committee"))
+            AvailableRoles = new SelectList(_db.Roles.Where(u => !u.Name.Contains("Administrator") && !u.Name.Contains("Committee"))
                                            .ToList(), "Name", "Name");
         }
 

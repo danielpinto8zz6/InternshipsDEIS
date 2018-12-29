@@ -26,6 +26,12 @@ namespace IntershipsDEIS.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.EvaluateCompany.Include(e => e.Company).Include(e => e.Student);
+
+            if (User.IsInRole("Student"))
+            {
+                return View(await applicationDbContext.Where(e => e.StudentId.Equals(GetUserId())).ToListAsync());
+            }
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -51,9 +57,26 @@ namespace IntershipsDEIS.Controllers
 
         // GET: EvaluateCompany/Create
         [Authorize(Roles = "Student")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create(string id)
         {
-            ViewData["CompanyId"] = new SelectList(_context.Users, "Id", "Id");
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var intership = await _context.Intership.FindAsync(id);
+            if (intership == null)
+            {
+                return NotFound();
+            }
+
+            // You can't evaluate if you wasn't placed 
+            var student = await _context.Users.FindAsync(GetUserId());
+            if (!intership.Placed.Contains(student))
+            {
+                return NotFound();
+            }
+
             return View();
         }
 
@@ -63,10 +86,17 @@ namespace IntershipsDEIS.Controllers
         [Authorize(Roles = "Student")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EvaluateCompanyId,CompanyId,Pontuation,Justification")] EvaluateCompany evaluateCompany)
+        public async Task<IActionResult> Create(string id, [Bind("EvaluateCompanyId,CompanyId,Pontuation,Justification")] EvaluateCompany evaluateCompany)
         {
             if (ModelState.IsValid)
             {
+                var intership = await _context.Intership.FindAsync(id);
+                if (intership == null)
+                {
+                    return NotFound();
+                }
+
+                evaluateCompany.CompanyId = intership.CompanyId;
                 evaluateCompany.StudentId = GetUserId();
                 _context.Add(evaluateCompany);
                 await _context.SaveChangesAsync();

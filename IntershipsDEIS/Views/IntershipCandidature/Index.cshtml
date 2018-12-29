@@ -34,7 +34,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                <a asp-action="Details" asp-controller="Users" asp-route-id="@item.Candidate.Id">@Html.DisplayFor(modelItem => item.Candidate.UserName)</a>
+                <a asp-action="Details" asp-controller="User" asp-route-id="@item.CandidateId">@Html.DisplayFor(modelItem => item.Candidate.UserName)</a>
             </td>
             <td>
                 <a asp-action="Details" asp-controller="Intership" asp-route-id="@item.IntershipId">@Html.DisplayFor(modelItem => item.Intership.Title)</a>
@@ -52,6 +52,10 @@
                 @Html.DisplayFor(modelItem => item.Result)
             </td>
             <td>
+                @if (this.User.IsInRole("Student") && item.Result == State.ACCEPTED)
+                {
+                    <a class="btn btn-warning btn-sm" asp-action="Evaluate" asp-route-id="@item.IntershipCandidatureId">Evaluate</a>
+                }
                 @if (this.User.IsInRole("Company") && item.Result == State.STANDBY)
                 {
                     <a class="btn btn-success btn-sm" asp-action="Accept" asp-route-id="@item.IntershipCandidatureId">Aprove</a>

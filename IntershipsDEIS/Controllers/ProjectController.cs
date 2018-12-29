@@ -37,6 +37,19 @@ namespace IntershipsDEIS.Controllers
                 return View(await _context.Project.ToListAsync());
             }
 
+            // if (User.IsInRole("Professor"))
+            // {
+
+            //     if (!String.IsNullOrEmpty(search))
+            //     {
+            //         var filter = _context.Project.Where(s => s.Title.Contains(search));
+            //         return View(await filter.ToListAsync());
+            //     }
+
+            //     var professor = _context.Users.FindAsync(GetUserId());
+            //     return View(await _context.Project.Where(p => p.Professors.ToList().Contains(professor)).ToListAsync());
+            // }
+
             if (!String.IsNullOrEmpty(search))
             {
                 var filter = _context.Project.Where(p => p.State.Equals(State.ACCEPTED) && p.Title.Contains(search));

@@ -40,11 +40,14 @@ namespace IntershipsDEIS.Models
         [DataType(DataType.MultilineText)]
         public string Justification { get; set; }
 
+        public IList<ApplicationUser> Placed { get; set; }
+
         public Project()
         {
             State = State.STANDBY;
             Professors = new List<ApplicationUser>();
             Candidatures = new List<ProjectCandidature>();
+            Placed = new List<ApplicationUser>();
         }
     }
 }

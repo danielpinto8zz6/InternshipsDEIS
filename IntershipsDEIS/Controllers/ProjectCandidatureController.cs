@@ -218,7 +218,11 @@ namespace IntershipsDEIS.Controllers
 
             projectCandidature.Result = State.ACCEPTED;
 
+            var project = projectCandidature.Project;
+            project.Placed.Add(projectCandidature.Candidate);
+
             _context.Update(projectCandidature);
+            _context.Update(project);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));

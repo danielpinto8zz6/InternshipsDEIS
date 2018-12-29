@@ -26,7 +26,13 @@ namespace IntershipsDEIS.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.EvaluateStudent.Include(e => e.Entity).Include(e => e.Student);
-            return View(await applicationDbContext.ToListAsync());
+
+            if (User.IsInRole("Committee"))
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+            
+            return View(await applicationDbContext.Where(e => e.EntityId.Equals(GetUserId())).ToListAsync());
         }
 
         // GET: EvaluateStudent/Details/5

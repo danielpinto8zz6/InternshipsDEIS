@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +13,7 @@ namespace IntershipsDEIS.Models
         [ForeignKey("Candidate")]
         public string CandidateId { get; set; }
 
-        public virtual ApplicationUser Candidate { get; set; }
+        public ApplicationUser Candidate { get; set; }
 
         [ForeignKey("Intership")]
         public string IntershipId { get; set; }
@@ -31,6 +32,8 @@ namespace IntershipsDEIS.Models
         public string UnfinishedGrades { get; set; }
 
         public State Result { get; set; }
+
+        public DateTime DefenseDate { get; set; }
 
         public IntershipCandidature()
         {

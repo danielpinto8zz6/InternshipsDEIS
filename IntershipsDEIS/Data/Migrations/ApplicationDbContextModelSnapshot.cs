@@ -31,6 +31,8 @@ namespace IntershipsDEIS.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("IntershipId");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -51,6 +53,8 @@ namespace IntershipsDEIS.Data.Migrations
 
                     b.Property<string>("ProjectId");
 
+                    b.Property<string>("ProjectId1");
+
                     b.Property<string>("Role");
 
                     b.Property<string>("SecurityStamp");
@@ -62,6 +66,8 @@ namespace IntershipsDEIS.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IntershipId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
 
@@ -70,6 +76,8 @@ namespace IntershipsDEIS.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("ProjectId1");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -170,6 +178,8 @@ namespace IntershipsDEIS.Data.Migrations
 
                     b.Property<string>("CandidateId");
 
+                    b.Property<DateTime>("DefenseDate");
+
                     b.Property<string>("Grades")
                         .IsRequired();
 
@@ -256,6 +266,8 @@ namespace IntershipsDEIS.Data.Migrations
                     b.Property<int>("Branch");
 
                     b.Property<string>("CandidateId");
+
+                    b.Property<DateTime>("DefenseDate");
 
                     b.Property<string>("Grades")
                         .IsRequired();
@@ -385,9 +397,17 @@ namespace IntershipsDEIS.Data.Migrations
 
             modelBuilder.Entity("IntershipsDEIS.Models.ApplicationUser", b =>
                 {
+                    b.HasOne("IntershipsDEIS.Models.Intership")
+                        .WithMany("Placed")
+                        .HasForeignKey("IntershipId");
+
+                    b.HasOne("IntershipsDEIS.Models.Project")
+                        .WithMany("Placed")
+                        .HasForeignKey("ProjectId");
+
                     b.HasOne("IntershipsDEIS.Models.Project")
                         .WithMany("Professors")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId1");
                 });
 
             modelBuilder.Entity("IntershipsDEIS.Models.EvaluateCompany", b =>

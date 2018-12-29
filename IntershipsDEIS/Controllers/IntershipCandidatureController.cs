@@ -32,7 +32,7 @@ namespace IntershipsDEIS.Controllers
             }
             else if (User.IsInRole("Company"))
             {
-                return View(await applicationDbContext.Where(s => s.Intership.CompanyId.Equals(GetUserId())).ToListAsync());
+                return View(await applicationDbContext.Where(s => s.IntershipId.Equals(GetUserId())).ToListAsync());
             }
             else if (User.IsInRole("Administrator") || User.IsInRole("Committee"))
             {
@@ -216,7 +216,11 @@ namespace IntershipsDEIS.Controllers
 
             intershipCandidature.Result = State.ACCEPTED;
 
+            var intership = intershipCandidature.Intership;
+            intership.Placed.Add(intershipCandidature.Candidate);
+
             _context.Update(intershipCandidature);
+            _context.Update(intership);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -254,6 +258,26 @@ namespace IntershipsDEIS.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> Evaluate(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var intershipCandidature = await _context.IntershipCandidature
+                .Include(s => s.Candidate)
+                .Include(s => s.Intership)
+                .FirstOrDefaultAsync(m => m.IntershipCandidatureId == id);
+            if (intershipCandidature == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction("Create", "EvaluateCompany", new { id = intershipCandidature.IntershipId });
         }
 
         private bool IntershipCandidatureExists(string id)
