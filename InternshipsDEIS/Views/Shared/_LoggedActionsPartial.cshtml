@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Identity
+@using InternshipsDEIS.Models
+
+@if (User.Identity.IsAuthenticated)
+{
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-envelope"></i>    
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" asp-controller="Message" asp-action="Create">New</a>
+                <a class="dropdown-item" asp-controller="Message" asp-action="Received">Received</a>
+                <a class="dropdown-item" asp-controller="Message" asp-action="Sent">Sent</a>
+            </div>
+        </li>
+    </ul>
+}

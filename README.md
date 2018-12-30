@@ -1,1 +1,1 @@
-# intershipsDEIS
+# InternshipsDEIS

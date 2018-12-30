@@ -1,0 +1,74 @@
+@model IEnumerable<InternshipsDEIS.Models.ProjectCandidature>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Candidate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Project)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Branch)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Grades)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UnfinishedGrades)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Result)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            @foreach (var item in Model) {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-controller="Users" asp-route-id="@item.Candidate.Id">@Html.DisplayFor(modelItem
+                        => item.Candidate.UserName)</a>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-controller="Project" asp-route-id="@item.ProjectId">@Html.DisplayFor(modelItem
+                        => item.Project.Title)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Branch)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grades)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnfinishedGrades)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Result)
+                </td>
+                <td>
+                @if (this.User.IsInRole("Professor") && item.Result == State.STANDBY)
+                {
+                    <a class="btn btn-success btn-sm" asp-action="Accept" asp-route-id="@item.ProjectCandidatureId">Aprove</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Reject" asp-route-id="@item.ProjectCandidatureId">Reject</a>
+                }
+                    <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.ProjectCandidatureId">Details</a>
+                @if (this.User.IsInRole("Student") && item.Result == State.STANDBY || this.User.IsInRole("Administrator"))
+                {
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ProjectCandidatureId">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ProjectCandidatureId">Delete</a>
+                }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

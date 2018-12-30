@@ -1,0 +1,62 @@
+@model IEnumerable<InternshipsDEIS.Models.Message>
+
+@{
+    ViewData["Title"] = "Sent";
+}
+
+<h1>Sent</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">New</a>
+</p>
+
+<div class="row">
+    <div class="col-sm-4">
+        <div class="list-group">
+            <a asp-controller="Message" asp-action="Received" class="list-group-item list-group-item-action disabled">
+                Received
+            </a>
+            <a asp-controller="Message" asp-action="Sent" class="list-group-item list-group-item-action active">Sent
+            </a>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Recipient)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model) {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Recipient.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" asp-action="Details" asp-route-id="@item.MessageId">View</a>
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.MessageId">Delete</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

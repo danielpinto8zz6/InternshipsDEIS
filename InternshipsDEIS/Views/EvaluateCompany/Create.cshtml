@@ -1,0 +1,36 @@
+@model InternshipsDEIS.Models.EvaluateCompany
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>EvaluateCompany</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Pontuation" class="control-label"></label>
+                <input asp-for="Pontuation" type="range" class="custom-range" min="0" max="20" step="1" id="rangeInput" oninput="amount.value=rangeInput.value" />
+                <output class="badge badge-pill badge-primary" name="amount" id="amount" for="rangeInput">10</output>
+                <span asp-validation-for="Pontuation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Justification" class="control-label"></label>
+                <textarea asp-for="Justification" class="form-control"></textarea>
+                <span asp-validation-for="Justification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

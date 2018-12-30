@@ -1,0 +1,28 @@
+@using Microsoft.AspNetCore.Identity
+@using InternshipsDEIS.Models
+
+@if (User.Identity.IsAuthenticated && User.IsInRole("Professor"))
+{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="ProjectCandidature" asp-action="Index">Candidatures</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link text-dark dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Projects
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" asp-controller="Project" asp-action="Create">Create</a>
+                <a class="dropdown-item" asp-controller="Project" asp-action="Index">View all</a>
+            </div>
+        </li>
+    </ul>
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="EvaluateStudent" asp-action="Create">Evaluate Student</a>
+        </li>
+    </ul>
+}
