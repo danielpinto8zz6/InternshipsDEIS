@@ -42,6 +42,11 @@ namespace InternshipsDEIS.Models
 
         public IList<ApplicationUser> Placed { get; set; }
 
+        [ForeignKey("Professor")]
+        public string ProfessorId { get; set; }
+        
+        public ApplicationUser Professor { get; set; }
+
         public Project()
         {
             State = State.STANDBY;

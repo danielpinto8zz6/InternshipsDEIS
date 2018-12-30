@@ -37,7 +37,7 @@ namespace InternshipsDEIS.Controllers
             }
             else if (User.IsInRole("Professor"))
             {
-                return View(await applicationDbContext.Where(p => p.Project.Professors.Any(o => o.Id.Equals(GetUserId()))).ToListAsync());
+                return View(await applicationDbContext.Where(p => p.Project.ProfessorId.Equals(GetUserId())).ToListAsync());
             }
             else
             {
@@ -204,14 +204,8 @@ namespace InternshipsDEIS.Controllers
                 return NotFound();
             }
 
-            var professor = await _context.Users.FindAsync(GetUserId());
-            if (professor == null)
-            {
-                return NotFound();
-            }
-
-            // Only professors of project can accept
-            if (!projectCandidature.Project.Professors.Contains(professor))
+            // Only professor of project can accept
+            if (!projectCandidature.Project.ProfessorId.Equals(GetUserId()))
             {
                 return NotFound();
             }
@@ -247,14 +241,8 @@ namespace InternshipsDEIS.Controllers
 
             if (!User.IsInRole("Committee"))
             {
-                var professor = await _context.Users.FindAsync(GetUserId());
-                if (professor == null)
-                {
-                    return NotFound();
-                }
-
-                // Only professors of project or committee can reject
-                if (!projectCandidature.Project.Professors.Contains(professor))
+                // Only professor of project or committee can reject
+                if (!projectCandidature.Project.ProfessorId.Equals(GetUserId()))
                 {
                     return NotFound();
                 }

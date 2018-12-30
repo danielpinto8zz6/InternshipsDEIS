@@ -30,11 +30,6 @@ namespace InternshipsDEIS.Controllers
                 return View(await _context.Project.ToListAsync());
             }
 
-            if (User.IsInRole("Professor"))
-            {
-                return View(await _context.Project.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
-            }
-
             // Show only accepted projects to geral/students...
             return View(await _context.Project.Where(p => p.State.Equals(State.ACCEPTED)).ToListAsync());
         }
@@ -42,7 +37,7 @@ namespace InternshipsDEIS.Controllers
         [Authorize(Roles = "Professor")]
         public async Task<IActionResult> Mine()
         {
-            return View(await _context.Project.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
+            return View(await _context.Project.Where(p => p.ProfessorId.Equals(GetUserId())).ToListAsync());
         }
 
         // GET: Project/Details/5
@@ -80,14 +75,7 @@ namespace InternshipsDEIS.Controllers
             if (ModelState.IsValid)
             {
                 project.Date = DateTime.UtcNow;
-
-                var professor = await _context.Users.FindAsync(GetUserId());
-                if (professor == null)
-                {
-                    return NotFound();
-                }
-
-                project.Professors.Add(professor);
+                project.ProfessorId = GetUserId();
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

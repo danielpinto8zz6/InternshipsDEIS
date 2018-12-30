@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace IntershipsDEIS.Data.Migrations
+namespace InternshipsDEIS.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181230013709_CreateDatabase")]
+    [Migration("20181230050238_CreateDatabase")]
     partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,12 +250,16 @@ namespace IntershipsDEIS.Data.Migrations
                     b.Property<string>("Objectives")
                         .IsRequired();
 
+                    b.Property<string>("ProfessorId");
+
                     b.Property<int>("State");
 
                     b.Property<string>("Title")
                         .IsRequired();
 
                     b.HasKey("ProjectId");
+
+                    b.HasIndex("ProfessorId");
 
                     b.ToTable("Project");
                 });
@@ -466,6 +470,13 @@ namespace IntershipsDEIS.Data.Migrations
                     b.HasOne("InternshipsDEIS.Models.ApplicationUser", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId");
+                });
+
+            modelBuilder.Entity("InternshipsDEIS.Models.Project", b =>
+                {
+                    b.HasOne("InternshipsDEIS.Models.ApplicationUser", "Professor")
+                        .WithMany()
+                        .HasForeignKey("ProfessorId");
                 });
 
             modelBuilder.Entity("InternshipsDEIS.Models.ProjectCandidature", b =>

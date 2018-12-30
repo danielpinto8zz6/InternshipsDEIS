@@ -32,7 +32,7 @@ namespace InternshipsDEIS.Controllers
             }
             else if (User.IsInRole("Company"))
             {
-                return View(await applicationDbContext.Where(s => s.InternshipId.Equals(GetUserId())).ToListAsync());
+                return View(await applicationDbContext.Where(s => s.Internship.CompanyId.Equals(GetUserId())).ToListAsync());
             }
             else if (User.IsInRole("Administrator") || User.IsInRole("Committee"))
             {
@@ -40,7 +40,7 @@ namespace InternshipsDEIS.Controllers
             }
             else if (User.IsInRole("Professor"))
             {
-                return View(await applicationDbContext.Where(s => s.Internship.Advisor.Equals(GetUserId())).ToListAsync());
+                return View(await applicationDbContext.Where(s => s.Internship.AdvisorId.Equals(GetUserId())).ToListAsync());
             }
             else
             {
