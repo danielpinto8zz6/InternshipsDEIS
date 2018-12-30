@@ -22,40 +22,27 @@ namespace InternshipsDEIS.Controllers
         }
 
         // GET: Project
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index()
         {
             // TODO: check if professor have rights to accept/reject
             if (User.IsInRole("Committee") || User.IsInRole("Administrator"))
             {
-
-                if (!String.IsNullOrEmpty(search))
-                {
-                    var filter = _context.Project.Where(s => s.Title.Contains(search));
-                    return View(await filter.ToListAsync());
-                }
-
                 return View(await _context.Project.ToListAsync());
             }
 
             if (User.IsInRole("Professor"))
             {
-
-                if (!String.IsNullOrEmpty(search))
-                {
-                    var filter = _context.Project.Where(s => s.Title.Contains(search));
-                    return View(await filter.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
-                }
                 return View(await _context.Project.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
-            }
-
-            if (!String.IsNullOrEmpty(search))
-            {
-                var filter = _context.Project.Where(p => p.State.Equals(State.ACCEPTED) && p.Title.Contains(search));
-                return View(await filter.ToListAsync());
             }
 
             // Show only accepted projects to geral/students...
             return View(await _context.Project.Where(p => p.State.Equals(State.ACCEPTED)).ToListAsync());
+        }
+
+        [Authorize(Roles = "Professor")]
+        public async Task<IActionResult> Mine()
+        {
+            return View(await _context.Project.Where(p => p.Professors.FirstOrDefault().Id.Equals(GetUserId())).ToListAsync());
         }
 
         // GET: Project/Details/5
@@ -92,7 +79,7 @@ namespace InternshipsDEIS.Controllers
         {
             if (ModelState.IsValid)
             {
-                project.Date = DateTime.UtcNow.Date;
+                project.Date = DateTime.UtcNow;
 
                 var professor = await _context.Users.FindAsync(GetUserId());
                 if (professor == null)

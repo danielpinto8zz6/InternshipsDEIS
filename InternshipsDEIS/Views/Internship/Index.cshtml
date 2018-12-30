@@ -12,17 +12,9 @@
         <a class="btn btn-primary" asp-action="Create">Create</a>
     </p>
 }
-<form asp-controller="Internship" asp-action="Index" method="get">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="Search">
-        <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="submit" value="Filter"><i class="fa fa-search"></i></button>
-        </div>
-    </div>
-</form>
 
 <div class="table-responsive">
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="searchTable">
         <thead>
             <tr>
                 <th>
@@ -102,7 +94,7 @@
                     <a class="btn btn-success btn-sm" asp-action="Apply" asp-route-id="@item.InternshipId">Apply</a>
                     }
                     <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.InternshipId">Details</a>
-                    @if (this.User.IsInRole("Company") || this.User.IsInRole("Administrator"))
+                    @if (this.User.IsInRole("Administrator"))
                     {
                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.InternshipId">Edit</a>
                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.InternshipId">Delete</a>

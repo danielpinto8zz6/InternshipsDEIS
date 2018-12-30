@@ -76,7 +76,7 @@
                     <a class="btn btn-success btn-sm" asp-action="Apply" asp-route-id="@item.ProjectId">Apply</a>
                     }
                     <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.ProjectId">Details</a>
-                    @if (this.User.IsInRole("Administrator"))
+                    @if (this.User.IsInRole("Professor") || this.User.IsInRole("Administrator"))
                     {
                     <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a>
                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>

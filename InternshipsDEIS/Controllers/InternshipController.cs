@@ -22,28 +22,25 @@ namespace InternshipsDEIS.Controllers
         }
 
         // GET: Internship
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Internship.Include(s => s.Advisor).Include(s => s.Company);
 
             // TODO: check if professor have rights to accept/reject
             if (User.IsInRole("Committee") || User.IsInRole("Administrator"))
             {
-                if (!String.IsNullOrEmpty(search))
-                {
-                    return View(await applicationDbContext.Where(s => s.Title.Contains(search)).ToListAsync());
-                }
-
                 return View(await applicationDbContext.ToListAsync());
-            }
-
-            if (!String.IsNullOrEmpty(search))
-            {
-                return View(await applicationDbContext.Where(s => s.Title.Contains(search) && s.State.Equals(State.ACCEPTED)).ToListAsync());
             }
 
             // Show only accepted projects to geral/students...
             return View(await applicationDbContext.Where(s => s.State.Equals(State.ACCEPTED)).ToListAsync());
+        }
+
+        [Authorize(Roles = "Company")]
+        public async Task<IActionResult> Mine()
+        {
+            var applicationDbContext = _context.Internship.Include(s => s.Advisor).Include(s => s.Company);
+            return View(await applicationDbContext.Where(c => c.CompanyId.Equals(GetUserId())).ToListAsync());
         }
 
         // GET: Internship/Details/5
@@ -85,6 +82,7 @@ namespace InternshipsDEIS.Controllers
             if (ModelState.IsValid)
             {
                 Internship.CompanyId = GetUserId();
+                Internship.Date = DateTime.UtcNow;
                 _context.Add(Internship);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

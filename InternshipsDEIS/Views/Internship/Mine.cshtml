@@ -1,12 +1,12 @@
-@model IEnumerable<InternshipsDEIS.Models.Project>
+@model IEnumerable<InternshipsDEIS.Models.Internship>
 
 @{
-    ViewData["Title"] = "Projects";
+    ViewData["Title"] = "Internships";
 }
 
-<h1>Projects</h1>
+<h1>Internships</h1>
 
-@if (User.Identity.IsAuthenticated && User.IsInRole("Professor"))
+@if (User.Identity.IsAuthenticated && User.IsInRole("Company"))
 {
     <p>
         <a class="btn btn-primary" asp-action="Create">Create</a>
@@ -33,10 +33,19 @@
                     @Html.DisplayNameFor(model => model.AccessConditions)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Branch)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Objectives)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Advisor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Company)
                 </th>
                 <th></th>
             </tr>
@@ -60,26 +69,35 @@
                     @Html.DisplayFor(modelItem => item.AccessConditions)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Branch)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Objectives)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Advisor.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company.Name)
+                </td>
+                <td>
                     @if (this.User.IsInRole("Committee") && item.State == State.STANDBY)
                     {
-                    <a class="btn btn-success btn-sm" asp-action="Accept" asp-route-id="@item.ProjectId">Accept</a>
-                    <a class="btn btn-warning btn-sm" asp-action="Reject" asp-route-id="@item.ProjectId">Reject</a>
+                    <a class="btn btn-success btn-sm" asp-action="Accept" asp-route-id="@item.InternshipId">Accept</a>
+                    <a class="btn btn-warning btn-sm" asp-action="Reject" asp-route-id="@item.InternshipId">Reject</a>
                     }
                     @if (this.User.IsInRole("Student"))
                     {
-                    <a class="btn btn-success btn-sm" asp-action="Apply" asp-route-id="@item.ProjectId">Apply</a>
+                    <a class="btn btn-success btn-sm" asp-action="Apply" asp-route-id="@item.InternshipId">Apply</a>
                     }
-                    <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.ProjectId">Details</a>
-                    @if (this.User.IsInRole("Administrator"))
+                    <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.InternshipId">Details</a>
+                    @if (this.User.IsInRole("Company") || this.User.IsInRole("Administrator"))
                     {
-                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.ProjectId">Edit</a>
-                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.ProjectId">Delete</a>
+                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.InternshipId">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.InternshipId">Delete</a>
                     }
                 </td>
             </tr>
